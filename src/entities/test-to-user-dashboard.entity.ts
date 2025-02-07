@@ -1,7 +1,8 @@
 import {
   AutoIncrement,
   Column,
-  ForeignKey, Model,
+  ForeignKey,
+  Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
