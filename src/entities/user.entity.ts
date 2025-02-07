@@ -2,9 +2,9 @@ import {
   AutoIncrement,
   BelongsToMany,
   Column,
+  DataType,
   HasMany,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
   Unique,
@@ -13,7 +13,7 @@ import { Roles } from '../config/enums/roles.enum';
 import { VerificationCodes } from './verification-codes.entity';
 import { Profession } from './professions.entity';
 import { Test } from './test.entity';
-import { TestToTestBlock } from './test-to-test-block.entity';
+import { TestToUserDashboard } from './test-to-user-dashboard.entity';
 
 @Table({ tableName: 'user' })
 export class User extends Model {
@@ -22,21 +22,17 @@ export class User extends Model {
   @Column
   id: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   username: string;
 
-  @NotNull
   @Unique
-  @Column
+  @Column({ allowNull: false })
   email: string;
 
-  @NotNull
-  @Column
+  @Column({ type: DataType.ENUM(...Object.values(Roles)), allowNull: false })
   role: Roles;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   password: string;
 
   @HasMany(() => VerificationCodes)
@@ -45,6 +41,6 @@ export class User extends Model {
   @HasMany(() => Profession)
   professions: Profession[];
 
-  @BelongsToMany(() => Test, () => TestToTestBlock)
+  @BelongsToMany(() => Test, () => TestToUserDashboard)
   tests: Test[];
 }

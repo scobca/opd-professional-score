@@ -5,13 +5,13 @@ import {
   Column,
   ForeignKey,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionToTestBlock } from './profession-to-test-block.entity';
+import { ProfessionalCharacteristics } from './professional-characteristics.entity';
 
 @Table({ tableName: 'professions' })
 export class Profession extends Model {
@@ -20,20 +20,18 @@ export class Profession extends Model {
   @Column
   id: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   description: string;
 
-  @ForeignKey(() => Profession)
+  @ForeignKey(() => ProfessionalCharacteristics)
   @Column
-  professionId: number;
+  professionalCharacteristics: number;
 
-  @BelongsTo(() => Profession)
-  profession: Profession;
+  @BelongsTo(() => ProfessionalCharacteristics)
+  professionalCharacteristic: ProfessionalCharacteristics;
 
   @ForeignKey(() => User)
   @Column

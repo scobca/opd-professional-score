@@ -1,4 +1,4 @@
 export enum CodeTypeEnum {
-  AUTH,
-  PASSWORD,
+  AUTH = 'AUTH',
+  PASSWORD = 'PASSWORD',
 }

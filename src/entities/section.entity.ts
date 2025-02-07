@@ -1,9 +1,9 @@
 import {
   AutoIncrement,
   Column,
+  DataType,
   HasMany,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
@@ -20,19 +20,18 @@ export class Section extends Model {
   @HasMany(() => Test)
   tests: Test[];
 
-  @NotNull
-  @Column
+  @Column({
+    type: DataType.ENUM(...Object.values(SectionType)),
+    allowNull: false,
+  })
   sectionType: SectionType;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   question: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   options: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   answer: string;
 }

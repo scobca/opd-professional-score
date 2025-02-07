@@ -5,7 +5,6 @@ import {
   Column,
   ForeignKey,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
@@ -14,6 +13,7 @@ import { Section } from './section.entity';
 import { TestBlock } from './test-blocks.entity';
 import { TestToTestBlock } from './test-to-test-block.entity';
 import { User } from './user.entity';
+import { TestToUserDashboard } from './test-to-user-dashboard.entity';
 
 @Table({ tableName: 'tests' })
 export class Test extends Model {
@@ -22,32 +22,25 @@ export class Test extends Model {
   @Column
   id: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   header: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   description: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   minPoints: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   maxPoints: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   minTime: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   maxTime: number;
 
   @ForeignKey(() => TestTypes)
@@ -67,6 +60,6 @@ export class Test extends Model {
   @BelongsToMany(() => TestBlock, () => TestToTestBlock)
   testBlocks: TestBlock[];
 
-  @BelongsToMany(() => User, () => TestToTestBlock)
+  @BelongsToMany(() => User, () => TestToUserDashboard)
   user: User[];
 }

@@ -2,9 +2,9 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  DataType,
   ForeignKey,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
@@ -16,14 +16,15 @@ export class VerificationCodes extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: string;
+  id: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   code: number;
 
-  @NotNull
-  @Column
+  @Column({
+    type: DataType.ENUM(...Object.values(CodeTypeEnum)),
+    allowNull: false,
+  })
   codeType: CodeTypeEnum;
 
   @ForeignKey(() => User)

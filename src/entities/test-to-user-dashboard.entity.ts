@@ -1,8 +1,7 @@
 import {
   AutoIncrement,
   Column,
-  ForeignKey,
-  NotNull,
+  ForeignKey, Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
@@ -10,7 +9,7 @@ import { Test } from './test.entity';
 import { User } from './user.entity';
 
 @Table({ tableName: 'test_to_user_dashboard' })
-export class TestToUserDashboard {
+export class TestToUserDashboard extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
@@ -24,15 +23,12 @@ export class TestToUserDashboard {
   @Column
   testId: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   score: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   time: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   valid: boolean;
 }

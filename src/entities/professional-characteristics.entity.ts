@@ -3,7 +3,6 @@ import {
   Column,
   HasMany,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
   Unique,
@@ -17,13 +16,11 @@ export class ProfessionalCharacteristics extends Model {
   @Column
   id: number;
 
-  @NotNull
   @Unique
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   description: string;
 
   @HasMany(() => Profession)

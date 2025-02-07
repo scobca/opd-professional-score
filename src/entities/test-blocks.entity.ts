@@ -3,7 +3,6 @@ import {
   BelongsToMany,
   Column,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
@@ -19,12 +18,10 @@ export class TestBlock extends Model {
   @Column
   id: number;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
-  @NotNull
-  @Column
+  @Column({ allowNull: false })
   description: string;
 
   @BelongsToMany(() => Test, () => TestToTestBlock)
