@@ -35,6 +35,9 @@ export class User extends Model {
   @Column({ allowNull: false })
   password: string;
 
+  @Column
+  isBanned: boolean;
+
   @HasMany(() => VerificationCodes)
   verificationCodes: VerificationCodes;
 
