@@ -5,11 +5,19 @@ import { VerificationCodes } from '../entities/verification-codes.entity';
 import { UserProvider } from '../providers/user.provider';
 import { UserController } from '../controllers/user.controller';
 import { BcryptUtil } from '../utils/bcrypt.util';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConfig } from '../config/jwt.conf';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, VerificationCodes])],
+  imports: [
+    SequelizeModule.forFeature([User, VerificationCodes]),
+    JwtModule.register({
+      secret: jwtConfig.jwtSecret,
+      signOptions: { expiresIn: jwtConfig.expiresIn },
+    }),
+  ],
   providers: [UserProvider, BcryptUtil],
   controllers: [UserController],
-  exports: [],
+  exports: [UserProvider],
 })
 export class UserModule {}

@@ -9,10 +9,15 @@ import { UpdateUserDto } from '../dto/user/update-user.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { SetUserRoleDto } from '../dto/user/set-user-role.dto';
 import { InvalidEnumSyntaxException } from '../exceptions/validation/invalid-enum-syntax.exception';
+import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserProvider {
-  constructor(@Inject(BcryptUtil) private bcryptUtil: BcryptUtil) {}
+  constructor(
+    @Inject(BcryptUtil) private bcryptUtil: BcryptUtil,
+    @Inject(JwtService) private jwtService: JwtService,
+  ) {}
 
   public async getAllUsers(): Promise<User[]> {
     return User.findAll();
@@ -54,7 +59,7 @@ export class UserProvider {
 
   public async createUser(
     data: CreateUserDto,
-  ): Promise<BasicSuccessfulResponse<User> | null> {
+  ): Promise<BasicSuccessfulResponse<SuccessAuthResponseDto>> {
     const user = await User.findOne({
       where: {
         email: data.email,
@@ -65,15 +70,26 @@ export class UserProvider {
         `User with email '${data.email}' already exists.`,
       );
 
-    return new BasicSuccessfulResponse(
-      await User.create({
-        username: data.username,
-        email: data.email,
-        role: data.role == null ? Roles.USER : data.role,
-        password: await this.bcryptUtil.hashPassword(data.password),
-        isBanned: data.isBanned == null ? false : data.isBanned,
+    const newUser = await User.create({
+      username: data.username,
+      email: data.email,
+      role: data.role == null ? Roles.USER : data.role,
+      password: await this.bcryptUtil.hashPassword(data.password),
+      isBanned: data.isBanned == null ? false : data.isBanned,
+    });
+
+    const response: SuccessAuthResponseDto = {
+      token: this.jwtService.sign({
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+        isBanned: newUser.isBanned,
       }),
-    );
+      role: newUser.role,
+    };
+
+    return new BasicSuccessfulResponse<SuccessAuthResponseDto>(response);
   }
 
   public async updateUser(

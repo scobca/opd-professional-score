@@ -14,6 +14,7 @@ import { UpdateUserDto } from '../dto/user/update-user.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { SetUserRoleDto } from '../dto/user/set-user-role.dto';
 import { Roles } from '../config/enums/roles.enum';
+import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
 
 @Controller('/user')
 export class UserController {
@@ -51,7 +52,7 @@ export class UserController {
   @Post('/create')
   public async createUser(
     @Body() data: CreateUserDto,
-  ): Promise<BasicSuccessfulResponse<User> | null> {
+  ): Promise<BasicSuccessfulResponse<SuccessAuthResponseDto>> {
     return await this.userProvider.createUser(data);
   }
 
