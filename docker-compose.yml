@@ -1,0 +1,52 @@
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: php.Dockerfile
+    ports:
+      - 8081:80
+    restart: always
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - php-pgsql-network
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+
+  postgresql:
+    image: postgres
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgresql-volume:/var/lib/postgresql/data
+    networks:
+      - php-pgsql-network
+
+  pgadmin:
+    image: dpage/pgadmin4:9.0
+    ports:
+      - 8080:80
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_USER: ${DB_USER}
+      PGADMIN_DEFAULT_EMAIL: ${DB_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgadmin-volume:/var/lib/pgadmin
+    networks:
+      - php-pgsql-network
+
+networks:
+  php-pgsql-network:
+
+volumes:
+  postgresql-volume:
+  pgadmin-volume:
