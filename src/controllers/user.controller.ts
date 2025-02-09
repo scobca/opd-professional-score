@@ -20,20 +20,25 @@ export class UserController {
   constructor(@Inject(UserProvider) private userProvider: UserProvider) {}
 
   @Get('/getAll')
-  public async getAllUsers(): Promise<User[]> {
-    return await this.userProvider.getAllUsers();
+  public async getAllUsers(): Promise<BasicSuccessfulResponse<User[]>> {
+    const users: User[] = await this.userProvider.getAllUsers();
+    return new BasicSuccessfulResponse<User[]>(users);
   }
 
   @Get('/getUserById')
-  public async getUserById(@Body() data: { id: number }): Promise<User | null> {
-    return await this.userProvider.getUserById(data.id);
+  public async getUserById(
+    @Body() data: { id: number },
+  ): Promise<BasicSuccessfulResponse<User> | null> {
+    const user = await this.userProvider.getUserById(data.id);
+    return new BasicSuccessfulResponse(user);
   }
 
   @Get('/getUserByEmail')
   public async getUserByEmail(
     @Body() data: { email: string },
-  ): Promise<User | null> {
-    return await this.userProvider.getUserByEmail(data.email);
+  ): Promise<BasicSuccessfulResponse<User> | null> {
+    const user = await this.userProvider.getUserByEmail(data.email);
+    return new BasicSuccessfulResponse(user);
   }
 
   @Get('/getUsersByRole')
