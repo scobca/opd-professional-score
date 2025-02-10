@@ -1,6 +1,6 @@
 <?php
 
-namespace Firebase\JWT;
+namespace lib;
 
 class ExpiredException extends \UnexpectedValueException implements JWTExceptionWithPayloadInterface
 {

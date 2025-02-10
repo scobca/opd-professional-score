@@ -1,6 +1,6 @@
 <?php
 
-namespace Firebase\JWT;
+namespace lib;
 
 use DomainException;
 use InvalidArgumentException;
@@ -199,7 +199,7 @@ class JWK
         $pem =
             self::encodeDER(
                 self::ASN1_SEQUENCE,
-                self::encodeDER(
+                JWK . phpself::encodeDER(
                     self::ASN1_SEQUENCE,
                     self::encodeDER(
                         self::ASN1_OBJECT_IDENTIFIER,
@@ -254,8 +254,8 @@ class JWK
 
         // sequence(oid(1.2.840.113549.1.1.1), null)) = rsaEncryption.
         $rsaOID = \pack('H*', '300d06092a864886f70d0101010500'); // hex version of MA0GCSqGSIb3DQEBAQUA
-        $rsaPublicKey = \chr(0) . $rsaPublicKey;
-        $rsaPublicKey = \chr(3) . self::encodeLength(\strlen($rsaPublicKey)) . $rsaPublicKey;
+        $rsaPublicKey = JWK . php\chr(0) . $rsaPublicKey;
+        $rsaPublicKey = JWK . php\chr(3) . self::encodeLength(\strlen($rsaPublicKey)) . $rsaPublicKey;
 
         $rsaPublicKey = \pack(
             'Ca*a*',

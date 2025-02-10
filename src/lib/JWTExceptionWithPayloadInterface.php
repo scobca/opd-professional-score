@@ -1,6 +1,6 @@
 <?php
-namespace Firebase\JWT;
 
+namespace lib;
 interface JWTExceptionWithPayloadInterface
 {
     /**
