@@ -1,6 +1,6 @@
 <?php
 
-namespace lib;
+namespace libs\jwt;
 interface JWTExceptionWithPayloadInterface
 {
     /**

@@ -4,10 +4,11 @@ use models\Database;
 
 include 'models/Database.php';
 
+
 $database = new Database();
 
 $create_tables = [
-    'CREATE TABLE IF NOT EXISTS Users 
+    'CREATE TABLE IF NOT EXISTS users 
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             username VARCHAR(255) NOT NULL,
@@ -16,7 +17,7 @@ $create_tables = [
             password VARCHAR(255) NOT NULL,
             is_verified BOOLEAN NOT NULL
         )',
-    'CREATE TABLE IF NOT EXISTS RefreshTokens 
+    'CREATE TABLE IF NOT EXISTS refresh_tokens
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             token VARCHAR(255) NOT NULL,
@@ -24,13 +25,13 @@ $create_tables = [
             created_at TIMESTAMP NOT NULL,
             expired_at TIMESTAMP NOT NULL
         )',
-    'CREATE TABLE IF NOT EXISTS Types 
+    'CREATE TABLE IF NOT EXISTS types 
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             name VARCHAR(255) UNIQUE NOT NULL,
             description VARCHAR(255) NOT NULL
         )',
-    'CREATE TABLE IF NOT EXISTS Tests 
+    'CREATE TABLE IF NOT EXISTS tests 
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             name VARCHAR(255) UNIQUE NOT NULL,
@@ -43,7 +44,7 @@ $create_tables = [
             type_id INTEGER REFERENCES types(id), 
             author_id INTEGER REFERENCES users(id)
         )',
-    'CREATE TABLE IF NOT EXISTS Sections 
+    'CREATE TABLE IF NOT EXISTS sections 
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             test_id INTEGER REFERENCES tests(id),
@@ -52,24 +53,24 @@ $create_tables = [
             options VARCHAR(255),
             answer VARCHAR(255)
         )',
-    'CREATE TABLE IF NOT EXISTS ProfessionalCharacteristics
+    'CREATE TABLE IF NOT EXISTS professional_characteristics
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             name VARCHAR(255) UNIQUE NOT NULL,
             description VARCHAR(255) NOT NULL
         )',
-    'CREATE TABLE  IF NOT EXISTS VerificationCodes
+    'CREATE TABLE  IF NOT EXISTS verification_codes
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             code INTEGER NOT NULL,
             user_email VARCHAR(255) REFERENCES users(email)
         )',
-    'CREATE TABLE IF NOT EXISTS Professions
+    'CREATE TABLE IF NOT EXISTS professions
         (
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             name VARCHAR(255) NOT NULL,
             description VARCHAR(255) NOT NULL,
-            pc_id INTEGER REFERENCES ProfessionalCharacteristics(id),
+            pc_id INTEGER REFERENCES professional_characteristics(id),
             author_id INTEGER REFERENCES users(id)
         )',
     'CREATE TABLE IF NOT EXISTS TestBlocks
@@ -78,7 +79,8 @@ $create_tables = [
             name VARCHAR(255) NOT NULL,
             description VARCHAR(255) NOT NULL,
             author_id INTEGER REFERENCES users(id)
-        )'
+        )',
+    'CREATE UNIQUE INDEX IF NOT EXISTS codes_user_email_unique ON verification_codes (user_email);'
 ];
 
 foreach ($create_tables as $table_query) {
@@ -89,14 +91,3 @@ foreach ($create_tables as $table_query) {
         echo $e->getMessage() . "<br>";
     }
 }
-
-$code = rand(100000, 999999);
-$to      = "max06safin@yandex.ru";
-$subject = 'the subject';
-$message = 'hello \r\n';
-$headers = 'From: webmaster@example.com' . "\r\n" .
-    'Reply-To: webmaster@example.com' . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
-
-$success = imap_mail($to, $subject, $message, $headers);
-var_dump($success);

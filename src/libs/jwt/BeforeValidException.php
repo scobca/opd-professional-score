@@ -1,8 +1,8 @@
 <?php
 
-namespace lib;
+namespace libs\jwt;
 
-class ExpiredException extends \UnexpectedValueException implements JWTExceptionWithPayloadInterface
+class BeforeValidException extends \UnexpectedValueException implements JWTExceptionWithPayloadInterface
 {
     private object $payload;
 

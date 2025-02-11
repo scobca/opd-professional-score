@@ -1,10 +1,13 @@
 <?php
 
-namespace lib;
+namespace libs\jwt;
 
 use DomainException;
 use InvalidArgumentException;
+use lib\phpself;
 use UnexpectedValueException;
+use function lib\php;
+use const lib\JWK;
 
 /**
  * JSON Web Key implementation, based on this spec:

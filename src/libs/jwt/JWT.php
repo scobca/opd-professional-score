@@ -1,16 +1,18 @@
 <?php
 
-namespace lib;
+namespace libs\jwt;
 
 use ArrayAccess;
 use DateTime;
 use DomainException;
 use Exception;
 use InvalidArgumentException;
+use lib\phpself;
 use OpenSSLAsymmetricKey;
 use OpenSSLCertificate;
 use stdClass;
 use UnexpectedValueException;
+use const lib\JWT;
 
 /**
  * JSON Web Token implementation, based on this spec:

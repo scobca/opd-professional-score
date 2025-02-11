@@ -1,6 +1,9 @@
 <?php
 
 namespace models;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 use PDO;
 use PDOException;
@@ -25,12 +28,19 @@ class User
     {
         $stmt = $this->db->prepare(
             "INSERT INTO users (username, email, role, password, is_verified) VALUES (?, ?, ?, ?, ?)");
-        try {
-            $stmt->execute([$username, $email, $role, $password, "false"]);
+        if ($stmt->execute([$username, $email, $role, $password, "false"])) {
             return true;
-        } catch (PDOException $e) {
-            return false;
         }
+        return false;
+    }
+
+    public function setVerified(string $email): bool
+    {
+        $stmt = $this->db->prepare("UPDATE users SET is_verified = 'true' WHERE email = ?");
+        if ($stmt->execute([$email])) {
+            return true;
+        }
+        return false;
     }
 
     public function getByEmail(string $email): bool
@@ -41,31 +51,33 @@ class User
     }
 
 
-    public function generateConfirmCode(string $email): mixed
+    public function generateConfirmCode(string $email): ?int
     {
         $code = rand(100000, 999999);
-        $to      = $email;
-        $subject = 'the subject';
-        $message = 'hello';
-        $headers = 'From: webmaster@example.com' . "\r\n" .
-            'Reply-To: webmaster@example.com' . "\r\n" .
-            'X-Mailer: PHP/' . phpversion();
-
-        $success = mail($to, $subject, $message, $headers);
-        if ($success) {
-            $stmt = $this->db->prepare("INSERT INTO VerificationCodes (code, user_email) VALUES (?, ?)");
-            $stmt->execute([$code, $email]);
+        $stmt = $this->db->prepare(
+            'INSERT INTO verification_codes (user_email, code) VALUES (?, ?)'
+        );
+        if ($stmt->execute([$email, $code])) {
             return $code;
-        } else {
-            return $email;
         }
+        return null;
+    }
+
+    public function deleteConfirmCode(string $email): bool
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM verification_codes WHERE user_email = ?'
+        );
+        return $stmt->execute([$email]);
     }
 
     public function getConfirmCode(string $email): ?int
     {
-        $stmt = $this->db->prepare("SELECT code FROM VerificationCodes WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC)['code'];
+        $stmt = $this->db->prepare("SELECT code FROM verification_codes WHERE user_email = ?");
+        if ($stmt->execute([$email])) {
+            return $stmt->fetchColumn();
+        }
+        return null;
     }
 
     public function getById(int $id): bool
@@ -75,7 +87,7 @@ class User
         return $this->fillData($stmt);
     }
 
-    public function fillData($stmt): bool
+    private function fillData($stmt): bool
     {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($data) {
