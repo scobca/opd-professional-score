@@ -6,6 +6,9 @@ import { TestTypes } from '../entities/test-types.entity';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { TestToUserDashboard } from '../entities/test-to-user-dashboard.entity';
 import { Section } from '../entities/section.entity';
+import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
+import { TestTypesProvider } from '../providers/test-types.provider';
+import { TestTypesController } from '../controllers/test-types.controller';
 
 @Module({
   imports: [
@@ -18,8 +21,8 @@ import { Section } from '../entities/section.entity';
       TestToUserDashboard,
     ]),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [TestTypesController],
+  providers: [TestTypesProvider, JwtDecoderUtil],
   exports: [],
 })
 export class TestModule {}
