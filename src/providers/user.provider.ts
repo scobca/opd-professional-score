@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { UserNotFoundException } from '../exceptions/users/user-not-found.exception';
 import { CreateUserDto } from '../dto/user/create-user.dto';
-import { DoubleRecordException } from '../exceptions/users/double-record.exception';
+import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 import { BcryptUtil } from '../utils/bcrypt.util';
 import { Roles } from '../config/enums/roles.enum';
 import { UpdateUserDto } from '../dto/user/update-user.dto';
