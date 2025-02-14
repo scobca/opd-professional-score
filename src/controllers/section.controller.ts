@@ -27,6 +27,11 @@ export class SectionController {
     return await this.sectionProvider.getSectionById(data.id);
   }
 
+  @Get('/getSectionsByTestId')
+  public async getSectionsByTestId(@Body() data: { testId: number }) {
+    return await this.sectionProvider.getSectionsByTestId(data.testId);
+  }
+
   @Post('/createSection')
   public async createSection(@Body() data: CreateSectionDto) {
     return await this.sectionProvider.create(data);

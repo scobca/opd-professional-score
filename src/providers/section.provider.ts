@@ -22,6 +22,10 @@ export class SectionProvider {
     return new BasicSuccessfulResponse<Section>(section);
   }
 
+  public async getSectionsByTestId(testId: number): Promise<Section[]> {
+    return await Section.findAll({ where: { testId: testId } });
+  }
+
   public async create(
     data: CreateSectionDto,
   ): Promise<BasicSuccessfulResponse<Section>> {
@@ -53,10 +57,8 @@ export class SectionProvider {
         updatedData.sectionType,
       );
 
-    const newSection = await Section.update(
-      { ...updatedData },
-      { where: { id: data.id } },
-    );
+    await Section.update({ ...updatedData }, { where: { id: data.id } });
+    const newSection = await Section.findOne({ where: { id: data.id } });
 
     return new BasicSuccessfulResponse(newSection);
   }
