@@ -7,6 +7,7 @@ import { UserModule } from './user.module';
 import { TestModule } from './test.module';
 import { ProfessionModule } from './professions.module';
 import { AuthModule } from './auth.module';
+import { SectionModule } from './section.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth.module';
       synchronize: true,
     }),
     UserModule,
+    SectionModule,
     TestModule,
     ProfessionModule,
     AuthModule,
