@@ -1,8 +1,9 @@
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
   DataType,
-  HasMany,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
@@ -17,8 +18,12 @@ export class Section extends Model {
   @Column
   id: number;
 
-  @HasMany(() => Test)
-  tests: Test[];
+  @ForeignKey(() => Test)
+  @Column
+  testId: number;
+
+  @BelongsTo(() => Test)
+  test: Test;
 
   @Column({
     type: DataType.ENUM(...Object.values(SectionType)),

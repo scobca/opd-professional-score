@@ -4,6 +4,7 @@ import {
   BelongsToMany,
   Column,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -45,17 +46,13 @@ export class Test extends Model {
 
   @ForeignKey(() => TestTypes)
   @Column
-  testId: number;
+  testTypeId: number;
 
   @BelongsTo(() => TestTypes)
   testType: TestTypes;
 
-  @ForeignKey(() => Section)
-  @Column
-  sectionId: number;
-
-  @BelongsTo(() => Section)
-  section: Section;
+  @HasMany(() => Section)
+  sections: Section[];
 
   @BelongsToMany(() => TestBlock, () => TestToTestBlock)
   testBlocks: TestBlock[];
