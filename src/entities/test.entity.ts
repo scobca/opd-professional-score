@@ -44,6 +44,12 @@ export class Test extends Model {
   @Column({ allowNull: false })
   maxTime: number;
 
+  @ForeignKey(() => User)
+  authorId: number;
+
+  @BelongsTo(() => User)
+  author: User;
+
   @ForeignKey(() => TestTypes)
   @Column
   testTypeId: number;

@@ -14,6 +14,7 @@ import { VerificationCodes } from './verification-codes.entity';
 import { Profession } from './professions.entity';
 import { Test } from './test.entity';
 import { TestToUserDashboard } from './test-to-user-dashboard.entity';
+import { TestBlock } from './test-blocks.entity';
 
 @Table({ tableName: 'user' })
 export class User extends Model {
@@ -37,6 +38,12 @@ export class User extends Model {
 
   @Column
   isBanned: boolean;
+
+  @HasMany(() => Test)
+  test: Test[];
+
+  @HasMany(() => TestBlock)
+  testBlocks: TestBlock[];
 
   @HasMany(() => VerificationCodes)
   verificationCodes: VerificationCodes;
