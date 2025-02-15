@@ -1,7 +1,6 @@
 import {
   AutoIncrement,
   Column,
-  DataType,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -21,7 +20,7 @@ export class TestToTestBlock extends Model {
   @ForeignKey(() => Test)
   testId: number;
 
-  @Column(DataType.INTEGER)
+  @Column
   @ForeignKey(() => TestBlock)
-  testBlockId: TestBlock;
+  testBlockId: number;
 }
