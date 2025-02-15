@@ -9,6 +9,7 @@ import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { UserProvider } from './user.provider';
 import { UpdateTestDto } from '../dto/test/update-test.dto';
 import { TypesMismatchException } from '../exceptions/common/types-mismatch.exception';
+import { TestCreatedResponse } from '../IO/custom/test-created-response';
 
 @Injectable()
 export class TestProvider {
@@ -54,7 +55,7 @@ export class TestProvider {
   public async createTest(
     data: CreateTestDto,
     authorId: number,
-  ): Promise<BasicSuccessfulResponse<Test>> {
+  ): Promise<BasicSuccessfulResponse<TestCreatedResponse>> {
     const test = await Test.create({
       ...data,
       authorId: authorId,
@@ -70,7 +71,7 @@ export class TestProvider {
       }),
     );
 
-    const res = {
+    const res: TestCreatedResponse = {
       message: 'Test created successfully.',
       test: await this.getTestById(test.id),
     };
