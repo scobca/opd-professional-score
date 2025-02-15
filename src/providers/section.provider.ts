@@ -69,4 +69,12 @@ export class SectionProvider {
 
     return new BasicSuccessfulResponse(`Section deleted successfully`);
   }
+
+  public async deleteAllByTestId(
+    id: number,
+  ): Promise<BasicSuccessfulResponse<string>> {
+    await Section.destroy({ where: { testId: id } });
+
+    return new BasicSuccessfulResponse(`Sections deleted successfully`);
+  }
 }
