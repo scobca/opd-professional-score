@@ -14,6 +14,8 @@ import { SectionProvider } from '../providers/section.provider';
 import { UserProvider } from '../providers/user.provider';
 import { BcryptUtil } from '../utils/bcrypt.util';
 import { JwtService } from '@nestjs/jwt';
+import { TestBlockProvider } from '../providers/test-block.provider';
+import { TestBlocksController } from '../controllers/test-blocks.controller';
 
 @Module({
   imports: [
@@ -25,13 +27,14 @@ import { JwtService } from '@nestjs/jwt';
       TestToUserDashboard,
     ]),
   ],
-  controllers: [TestTypesController, TestController],
+  controllers: [TestTypesController, TestController, TestBlocksController],
   providers: [
     JwtDecoderUtil,
     JwtService,
     BcryptUtil,
     TestTypesProvider,
     TestProvider,
+    TestBlockProvider,
     SectionProvider,
     UserProvider,
   ],
