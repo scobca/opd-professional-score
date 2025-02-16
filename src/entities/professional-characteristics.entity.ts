@@ -1,13 +1,14 @@
 import {
   AutoIncrement,
+  BelongsToMany,
   Column,
-  HasMany,
   Model,
   PrimaryKey,
   Table,
   Unique,
 } from 'sequelize-typescript';
 import { Profession } from './professions.entity';
+import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
 
 @Table({ tableName: 'professional_characteristics' })
 export class ProfessionalCharacteristics extends Model {
@@ -23,6 +24,9 @@ export class ProfessionalCharacteristics extends Model {
   @Column({ allowNull: false })
   description: string;
 
-  @HasMany(() => Profession)
-  professionals: Profession[];
+  @BelongsToMany(
+    () => Profession,
+    () => ProfessionToProfessionalCharacteristics,
+  )
+  profession: Profession[];
 }

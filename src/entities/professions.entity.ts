@@ -12,6 +12,7 @@ import { User } from './user.entity';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionToTestBlock } from './profession-to-test-block.entity';
 import { ProfessionalCharacteristics } from './professional-characteristics.entity';
+import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
 
 @Table({ tableName: 'professions' })
 export class Profession extends Model {
@@ -26,19 +27,18 @@ export class Profession extends Model {
   @Column({ allowNull: false })
   description: string;
 
-  @ForeignKey(() => ProfessionalCharacteristics)
-  @Column
-  professionalCharacteristics: number;
-
-  @BelongsTo(() => ProfessionalCharacteristics)
-  professionalCharacteristic: ProfessionalCharacteristics;
-
   @ForeignKey(() => User)
   @Column
   authorId: number;
 
   @BelongsTo(() => User)
   user: User;
+
+  @BelongsToMany(
+    () => ProfessionalCharacteristics,
+    () => ProfessionToProfessionalCharacteristics,
+  )
+  professionalCharacteristics: ProfessionalCharacteristics[];
 
   @BelongsToMany(() => TestBlock, () => ProfessionToTestBlock)
   testBlocks: TestBlock[];
