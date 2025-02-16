@@ -8,6 +8,7 @@ import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
 import { IncorrectUserCreditsException } from '../exceptions/auth/incorrect-user-credits.exception';
 import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dto/user/create-user.dto';
 
 @Injectable()
 export class AuthProvider {
@@ -23,21 +24,13 @@ export class AuthProvider {
     const user = await this.userProvider.getUserByEmail(data.email);
 
     if (user && (await this.bcryptUtil.compare(data.password, user.password))) {
-      const payload: UserPayload = {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        isBanned: user.isBanned,
-      };
-
-      const response: SuccessAuthResponseDto = {
-        token: this.jwtService.sign(payload),
-        role: user.role,
-      };
-      return new BasicSuccessfulResponse<SuccessAuthResponseDto>(response);
+      return this.createToken(user);
     }
     throw new IncorrectUserCreditsException();
+  }
+
+  public async register(data: CreateUserDto) {
+    return await this.userProvider.createUser(data);
   }
 
   public createToken(
