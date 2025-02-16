@@ -5,6 +5,13 @@ import { ProfessionToTestBlock } from '../entities/profession-to-test-block.enti
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ProfessionalCharacteristicsProvider } from '../providers/professional-characteristics.provider';
 import { ProfessionalCharacteristicsController } from '../controllers/professional-characteristics.controller';
+import { UserProvider } from '../providers/user.provider';
+import { JwtService } from '@nestjs/jwt';
+import { BcryptUtil } from '../utils/bcrypt.util';
+import { ProfessionProvider } from '../providers/profession.provider';
+import { ProfessionToProfessionalCharacteristics } from '../entities/profession-to-professional-characteristics.entity';
+import { ProfessionController } from '../controllers/professions.controller';
+import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 
 @Module({
   imports: [
@@ -12,10 +19,18 @@ import { ProfessionalCharacteristicsController } from '../controllers/profession
       ProfessionalCharacteristics,
       Profession,
       ProfessionToTestBlock,
+      ProfessionToProfessionalCharacteristics,
     ]),
   ],
-  providers: [ProfessionalCharacteristicsProvider],
-  controllers: [ProfessionalCharacteristicsController],
+  providers: [
+    ProfessionalCharacteristicsProvider,
+    ProfessionProvider,
+    JwtService,
+    JwtDecoderUtil,
+    BcryptUtil,
+    UserProvider,
+  ],
+  controllers: [ProfessionalCharacteristicsController, ProfessionController],
   exports: [],
 })
 export class ProfessionModule {}
