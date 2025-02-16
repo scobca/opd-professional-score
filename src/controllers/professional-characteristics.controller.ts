@@ -6,12 +6,16 @@ import {
   Inject,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ProfessionalCharacteristicsProvider } from '../providers/professional-characteristics.provider';
 import { CreateProfCharDto } from '../dto/professions/professional-characteristics/create-prof-char.dto';
 import { UpdateProfCharDto } from '../dto/professions/professional-characteristics/update-prof-char.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/profChar')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ProfessionalCharacteristicsController {
   constructor(
     @Inject(ProfessionalCharacteristicsProvider)

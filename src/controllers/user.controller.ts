@@ -6,6 +6,7 @@ import {
   Inject,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UserProvider } from '../providers/user.provider';
 import { User } from '../entities/user.entity';
@@ -15,8 +16,11 @@ import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { SetUserRoleDto } from '../dto/user/set-user-role.dto';
 import { Roles } from '../config/enums/roles.enum';
 import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/user')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
   constructor(@Inject(UserProvider) private userProvider: UserProvider) {}
 

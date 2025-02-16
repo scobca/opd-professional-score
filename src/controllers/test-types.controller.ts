@@ -6,12 +6,16 @@ import {
   Inject,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { TestTypesProvider } from '../providers/test-types.provider';
 import { CreateTestTypeDto } from '../dto/test/test-types/create-test-type.dto';
 import { UpdateTypeDto } from '../dto/test/test-types/update-type.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/testTypes')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TestTypesController {
   constructor(
     @Inject(TestTypesProvider) private testTypesProvider: TestTypesProvider,
