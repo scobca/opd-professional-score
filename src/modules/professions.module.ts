@@ -3,6 +3,8 @@ import { ProfessionalCharacteristics } from '../entities/professional-characteri
 import { Profession } from '../entities/professions.entity';
 import { ProfessionToTestBlock } from '../entities/profession-to-test-block.entity';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ProfessionalCharacteristicsProvider } from '../providers/professional-characteristics.provider';
+import { ProfessionalCharacteristicsController } from '../controllers/professional-characteristics.controller';
 
 @Module({
   imports: [
@@ -12,8 +14,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
       ProfessionToTestBlock,
     ]),
   ],
-  providers: [],
-  controllers: [],
+  providers: [ProfessionalCharacteristicsProvider],
+  controllers: [ProfessionalCharacteristicsController],
   exports: [],
 })
 export class ProfessionModule {}
