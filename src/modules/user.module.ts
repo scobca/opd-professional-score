@@ -18,6 +18,6 @@ import { jwtConfig } from '../config/jwt.conf';
   ],
   providers: [UserProvider, BcryptUtil],
   controllers: [UserController],
-  exports: [UserProvider],
+  exports: [UserProvider, BcryptUtil],
 })
 export class UserModule {}
