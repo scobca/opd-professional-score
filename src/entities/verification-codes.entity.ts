@@ -1,15 +1,12 @@
 import {
   AutoIncrement,
-  BelongsTo,
   Column,
   DataType,
-  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 import { CodeTypeEnum } from '../config/enums/code-type.enum';
-import { User } from './user.entity';
 
 @Table({ tableName: 'verification_codes' })
 export class VerificationCodes extends Model {
@@ -27,10 +24,6 @@ export class VerificationCodes extends Model {
   })
   codeType: CodeTypeEnum;
 
-  @ForeignKey(() => User)
   @Column
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
+  email: string;
 }
