@@ -8,7 +8,13 @@ import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
 import { IncorrectUserCreditsException } from '../exceptions/auth/incorrect-user-credits.exception';
 import { User } from '../entities/user.entity';
-import { CreateUserDto } from '../dto/user/create-user.dto';
+import { MailerProvider } from './mailer.provider';
+import { RegistrationFirstStepDto } from '../dto/auth/registration-first-step.dto';
+import { MailInfoDto } from '../dto/mailer/mail-info.dto';
+import { AuthCodesStrategy } from '../strategies/auth-codes.strategy';
+import { DoubleRecordException } from '../exceptions/common/double-record.exception';
+import { IncorrectVerificationCodeException } from '../exceptions/auth/incorrect-verification-code.exception';
+import { RegistrationSecondStepDto } from '../dto/auth/registration-second-step.dto';
 
 @Injectable()
 export class AuthProvider {
@@ -16,7 +22,39 @@ export class AuthProvider {
     @Inject(UserProvider) private userProvider: UserProvider,
     @Inject(BcryptUtil) private bcryptUtil: BcryptUtil,
     @Inject(JwtService) private jwtService: JwtService,
+    @Inject(MailerProvider) private mailerProvider: MailerProvider,
+    @Inject(AuthCodesStrategy) private authCodesStrategy: AuthCodesStrategy,
   ) {}
+
+  public async signUpFirstStep(
+    data: RegistrationFirstStepDto,
+  ): Promise<BasicSuccessfulResponse<string>> {
+    const user = await User.findOne({ where: { email: data.email } });
+    if (user != null)
+      throw new DoubleRecordException('User already exist. Want to login?');
+
+    const code = await this.authCodesStrategy.applyAuthCode(data.email);
+    const mail: MailInfoDto = {
+      email: data.email,
+      username: data.username,
+      code: code.code,
+    };
+
+    await this.mailerProvider.sendVerificationMail(mail);
+    return new BasicSuccessfulResponse<string>(
+      'Email with verification code sent successfully.',
+    );
+  }
+
+  public async registerSecondStep(data: RegistrationSecondStepDto) {
+    if (
+      await this.authCodesStrategy.verifyCode(data.code, data.userData.email)
+    ) {
+      return await this.userProvider.createUser(data.userData);
+    } else {
+      throw new IncorrectVerificationCodeException();
+    }
+  }
 
   public async login(
     data: LoginUserDto,
@@ -27,10 +65,6 @@ export class AuthProvider {
       return this.createToken(user);
     }
     throw new IncorrectUserCreditsException();
-  }
-
-  public async register(data: CreateUserDto) {
-    return await this.userProvider.createUser(data);
   }
 
   public createToken(
