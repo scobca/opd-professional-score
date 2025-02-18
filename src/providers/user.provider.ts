@@ -11,12 +11,20 @@ import { SetUserRoleDto } from '../dto/user/set-user-role.dto';
 import { InvalidEnumSyntaxException } from '../exceptions/validation/invalid-enum-syntax.exception';
 import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ChangePassFirstStepDto } from '../dto/user/change-pass-first-step.dto';
+import { AuthCodesStrategy } from '../strategies/auth-codes.strategy';
+import { MailerProvider } from './mailer.provider';
+import { MailInfoDto } from '../dto/mailer/mail-info.dto';
+import { ChangePassSecondStepDto } from '../dto/user/change-pass-second-step.dto';
+import { IncorrectVerificationCodeException } from '../exceptions/auth/incorrect-verification-code.exception';
 
 @Injectable()
 export class UserProvider {
   constructor(
     @Inject(BcryptUtil) private bcryptUtil: BcryptUtil,
     @Inject(JwtService) private jwtService: JwtService,
+    @Inject(AuthCodesStrategy) private authCodesStrategy: AuthCodesStrategy,
+    @Inject(MailerProvider) private mailerProvider: MailerProvider,
   ) {}
 
   public async getAllUsers(): Promise<User[]> {
@@ -154,5 +162,36 @@ export class UserProvider {
     await User.update({ role: data.role }, { where: { id: data.id } });
 
     return new BasicSuccessfulResponse(`User's role updated successfully`);
+  }
+
+  public async changePasswordFirstStep(
+    data: ChangePassFirstStepDto,
+  ): Promise<BasicSuccessfulResponse<string>> {
+    const user = await this.getUserByEmail(data.email);
+    const code = await this.authCodesStrategy.applyPassCode(data.email);
+
+    const mail: MailInfoDto = {
+      email: data.email,
+      username: (user as User).username,
+      code: code.code,
+    };
+    await this.mailerProvider.sendPassVerificationMail(mail);
+    return new BasicSuccessfulResponse(
+      'Email with verification code sent successfully.',
+    );
+  }
+
+  public async changePasswordSecondStep(
+    data: ChangePassSecondStepDto,
+  ): Promise<BasicSuccessfulResponse<string>> {
+    const user = await this.getUserByEmail(data.email);
+
+    if (await this.authCodesStrategy.verifyCode(data.code, data.email)) {
+      await User.update(
+        { password: await this.bcryptUtil.hashPassword(data.password) },
+        { where: { id: user?.id } },
+      );
+      return new BasicSuccessfulResponse('Password changed successfully');
+    } else throw new IncorrectVerificationCodeException();
   }
 }

@@ -40,7 +40,7 @@ export class AuthProvider {
       code: code.code,
     };
 
-    await this.mailerProvider.sendVerificationMail(mail);
+    await this.mailerProvider.sendAccountVerificationMail(mail);
     return new BasicSuccessfulResponse<string>(
       'Email with verification code sent successfully.',
     );

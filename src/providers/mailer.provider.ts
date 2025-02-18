@@ -7,12 +7,21 @@ import * as process from 'node:process';
 export class MailerProvider {
   constructor(@Inject(MailerService) private mailService: MailerService) {}
 
-  public async sendVerificationMail(data: MailInfoDto) {
+  public async sendAccountVerificationMail(data: MailInfoDto) {
     await this.mailService.sendMail({
       to: data.email,
       from: process.env.SMTP_USER,
       subject: 'Verify your email on Opd-Professional-Score',
-      html: `Dear, ${data.username}! <br> There is your verification code: <br> <b> ${data.code} </b> <br> Don't tell code to anyone!`,
+      html: `Dear, ${data.username}! <br> There is your verification code: <br><br> <b> ${data.code} </b> <br><br> Don't tell code to anyone!`,
+    });
+  }
+
+  public async sendPassVerificationMail(data: MailInfoDto) {
+    await this.mailService.sendMail({
+      to: data.email,
+      from: process.env.SMTP_USER,
+      subject: 'Verify your password changing on Opd-Professional-Score',
+      html: `Dear, ${data.username}! <br> There is your verification code: <br><br> <b> ${data.code} </b> <br><br> Don't tell code to anyone!`,
     });
   }
 }

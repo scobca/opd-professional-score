@@ -18,6 +18,8 @@ import { Roles } from '../config/enums/roles.enum';
 import { SuccessAuthResponseDto } from '../dto/auth/success-auth-response.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
+import { ChangePassFirstStepDto } from '../dto/user/change-pass-first-step.dto';
+import { ChangePassSecondStepDto } from '../dto/user/change-pass-second-step.dto';
 
 @Controller('/user')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -93,5 +95,15 @@ export class UserController {
     @Body() data: SetUserRoleDto,
   ): Promise<BasicSuccessfulResponse<string>> {
     return await this.userProvider.setUserRole(data);
+  }
+
+  @Post('/changePasswordFirstStep')
+  public async changePasswordFirstStep(@Body() data: ChangePassFirstStepDto) {
+    return await this.userProvider.changePasswordFirstStep(data);
+  }
+
+  @Patch('/changePasswordSecondStep')
+  public async changePasswordSecondStep(@Body() data: ChangePassSecondStepDto) {
+    return await this.userProvider.changePasswordSecondStep(data);
   }
 }

@@ -36,11 +36,9 @@ export class AuthCodesStrategy {
       await this.deleteCode(code.id);
 
     return await VerificationCodes.create({
-      where: {
-        code: this.codeGenerator.generateCode(),
-        codeType: CodeTypeEnum.PASSWORD,
-        email: email,
-      },
+      code: this.codeGenerator.generateCode(),
+      codeType: CodeTypeEnum.PASSWORD,
+      email: email,
     });
   }
 
