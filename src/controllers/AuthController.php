@@ -131,17 +131,16 @@ class AuthController
             $mail->Port = 465;//TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            $mail->setFrom('gustavo_fring@gmail.com', 'Gustavo Fring');
+            $mail->setFrom('opd-prof-score@mail.ru', 'OPD Management');
             $mail->addAddress($email, $user->username);     //Add a recipient
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Verify email on OPD-PROFESSIONAL-SCAM';
+            $mail->Subject = 'Verify email on OPD-professional-score';
             $mail->Body =
                 'Hello, ' . $user->username . '! You decided to verify your email address, so this is your verification code: <b>' . $code . '</b>
-                    <br>By the way, don\'t forget to visit our Los Pollos Hermanos restaurant!
-                    <img src="https://i.mycdn.me/image?id=951009744332&t=50&plc=WEB&tkn=*_JTw9fc8_r5tiWm4VcBHQ-jOYsQ&fn=external_8">';
-            $mail->AltBody = 'This is your verification code <b>' . $code . '</b>';
+                    <br>By the way, don\'t forget to visit our Los Pollos Hermanos restaurant!';
+                    $mail->AltBody = 'This is your verification code <b>' . $code . '</b>';
             $mail->SMTPDebug = 0;
             $mail->send();
 
