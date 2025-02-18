@@ -53,6 +53,9 @@ class User
 
     public function generateConfirmCode(string $email): ?int
     {
+        $stmt = $this->db->prepare("DELETE FROM verification_codes WHERE 
+                                   EXISTS (SELECT * FROM verification_codes WHERE user_email = ?)");
+        $stmt->execute([$email]);
         $code = rand(100000, 999999);
         $stmt = $this->db->prepare(
             'INSERT INTO verification_codes (user_email, code) VALUES (?, ?)'

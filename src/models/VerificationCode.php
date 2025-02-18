@@ -6,7 +6,7 @@ class VerificationCode
 {
     private $id;
     private $code;
-    private $user_email
+    private $user_email;
 
 
 }

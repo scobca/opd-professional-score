@@ -16,62 +16,20 @@ class AuthController
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/User.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
-        require 'libs/mailer/src/Exception.php';
-        require 'libs/mailer/src/PHPMailer.php';
-        require 'libs/mailer/src/SMTP.php';
 
         $db = new Database();
         $conn = $db->getConnection();
         $user = new User($conn);
 
-        if ($user->create($username, $email, $role, password_hash($password, PASSWORD_BCRYPT))) {
-            $code = $user->generateConfirmCode($email);
-            $mail = new PHPMailer(true);
-            try {
-                //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-                $mail->isSMTP();                                            //Send using SMTP
-                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                $mail->Username   = $_ENV['SMTP_MAIL'];   //SMTP username
-                $mail->Password   = $_ENV['SMTP_PASSWORD'];                           //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-                $mail->Port       = 465;//TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-                //Recipients
-                $mail->setFrom('gustavo_fring@gmail.com', 'Gustavo Fring');
-                $mail->addAddress($email, $username);     //Add a recipient
-
-                //Content
-                $mail->isHTML(true);                                  //Set email format to HTML
-                $mail->Subject = 'Verify email on OPD-PROFESSIONAL-SCAM';
-                $mail->Body    =
-                    'Hello, ' . $username . '! You decided to verify your email address, so this is your verification code: <b>' . $code . '</b>
-                    <br>By the way, don\'t forget to visit our Los Pollos Hermanos restaurant!
-                    <img src="https://i.mycdn.me/image?id=951009744332&t=50&plc=WEB&tkn=*_JTw9fc8_r5tiWm4VcBHQ-jOYsQ&fn=external_8">';
-                $mail->AltBody = 'This is your verification code <b>' . $code . '</b>';
-                $mail->SMTPDebug = 0;
-                $mail->send();
-
-            } catch (Exception $e) {
-                http_response_code(554);
-                json_encode(
-                    array(
-                        "message" => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}",
-                    ))
-                ;
-            }
-            http_response_code(200);
-            echo json_encode(
-                array(
-                    "message" => "Registration successful, now verify your email.",
-                )
-            );
-        } else {
+        try {
+            $user->create($username, $email, $role, password_hash($password, PASSWORD_BCRYPT));
+            self::sendCode($email);
+        } catch (\PDOException $e) {
             http_response_code(401);
             echo json_encode(
                 array(
-                    "message" => "Email already exists"
+                    "status" => 401,
+                    "message" => "Email already exists, want to login?"
                 )
             );
         }
@@ -91,39 +49,47 @@ class AuthController
                 $jwt = self::createJWT($user);
                 echo json_encode(
                     array(
+                        "status" => 200,
                         "message" => "Authentication successful",
-                        "jwt" => $jwt
+                        "jwt" => $jwt,
                     )
                 );
             } else {
                 http_response_code(401);
-
                 echo json_encode(
                     array(
-                        "message" => "User not verified"
+                        "status" => 401,
+                        "message" => "User isn't verified"
                     )
                 );
             }
         } else {
             http_response_code(401);
-            echo json_encode(array("message" => "Email or password is incorrect"));
+            echo json_encode(
+                array(
+                    "status" => 401,
+                    "message" => "Incorrect email or password"
+                )
+            );
         }
     }
 
-    public static function verify($email, $code)
+    public static function verify($email, $code): void
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/User.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
         $db = new Database();
         $conn = $db->getConnection();
         $user = new User($conn);
-        if ($user->getConfirmCode($email) == $code) {
+        if ($user->getConfirmCode($email) == (int) $code) {
             if ($user->setVerified($email)) {
                 $user->getByEmail($email);
                 $jwt = self::createJWT($user);
                 $user->deleteConfirmCode($email);
+                http_response_code(200);
                 echo json_encode(
                     array(
+                        "status" => 200,
                         "message" => "Authentication successful",
                         "jwt" => $jwt
                     )
@@ -133,9 +99,66 @@ class AuthController
             http_response_code(401);
             echo json_encode(
                 array(
+                    "status" => 401,
                     "message" => "Code is incorrect"
                 )
             );
+        }
+    }
+
+    public static function sendCode($email) {
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/models/User.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
+        require 'libs/mailer/src/Exception.php';
+        require 'libs/mailer/src/PHPMailer.php';
+        require 'libs/mailer/src/SMTP.php';
+        $db = new Database();
+        $conn = $db->getConnection();
+        $user = new User($conn);
+
+        $code = $user->generateConfirmCode($email);
+        $user->getByEmail($email);
+        $mail = new PHPMailer(true);
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth = true;                                   //Enable SMTP authentication
+            $mail->Username = $_ENV['SMTP_MAIL'];   //SMTP username
+            $mail->Password = $_ENV['SMTP_PASSWORD'];                           //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+            $mail->Port = 465;//TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom('gustavo_fring@gmail.com', 'Gustavo Fring');
+            $mail->addAddress($email, $user->username);     //Add a recipient
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Verify email on OPD-PROFESSIONAL-SCAM';
+            $mail->Body =
+                'Hello, ' . $user->username . '! You decided to verify your email address, so this is your verification code: <b>' . $code . '</b>
+                    <br>By the way, don\'t forget to visit our Los Pollos Hermanos restaurant!
+                    <img src="https://i.mycdn.me/image?id=951009744332&t=50&plc=WEB&tkn=*_JTw9fc8_r5tiWm4VcBHQ-jOYsQ&fn=external_8">';
+            $mail->AltBody = 'This is your verification code <b>' . $code . '</b>';
+            $mail->SMTPDebug = 0;
+            $mail->send();
+
+            echo json_encode(
+                array(
+                    "status" => 200,
+                    "message" => "Verification code has been sent",
+                )
+            );
+
+        } catch (Exception $e) {
+            http_response_code(554);
+            json_encode(
+                array(
+                    "status" => 554,
+                    "message" => "Email could not be sent. Mailer Error: {$mail->ErrorInfo}",
+                ));
         }
     }
 

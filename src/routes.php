@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://authentication-jwt/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
@@ -10,47 +10,64 @@ require_once __DIR__ . '/router.php';
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/AuthController.php";
 
 post('/sign-in', function () {
-    $data = json_decode(file_get_contents("php://input"));
-    if (!empty($data->email) && !empty($data->password)) {
-        $email = trim($data->email);
-        $password = trim($data->password);
+    if (!empty($_POST['email']) && !empty($_POST['password'])) {
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
         \controllers\AuthController::login($email, $password);
     } else {
+        http_response_code(400);
         echo json_encode(array(
-            "message" => "Missing email or password."
+            "status" => 400,
+            "message" => "Fill empty fields",
         ));
     }
 });
 
 post('/sign-up', function () {
-    $data = json_decode(file_get_contents("php://input"));
-    if (!empty($data->username) && !empty($data->email) && !empty($data->role) && !empty($data->password)) {
-        $username = htmlspecialchars($data->username);
-        $email = htmlspecialchars(trim($data->email));
-        $role = htmlspecialchars(trim($data->role));
-        $password = htmlspecialchars(trim($data->password));
-        \controllers\AuthController::register($username, $email, $role, $password);
+    if (!empty($_POST['username']) && !empty($_POST['email'])
+        && !empty($_POST['password']) && !empty($_POST['password-confirm'])) {
+        if ($_POST['password'] == $_POST['password-confirm']) {
+            $username = htmlspecialchars($_POST['username']);
+            $email = htmlspecialchars(trim($_POST['email']));
+            $password = htmlspecialchars(trim($_POST['password']));
+            \controllers\AuthController::register($username, $email, "user", $password);
+        } else {
+            http_response_code(400);
+            echo json_encode(array(
+                "status" => 400,
+                "message" => "Passwords don't match",
+            ));
+        }
+
     } else {
+        http_response_code(400);
         echo json_encode(array(
+            "status" => 400,
             "message" => "Fill empty fields",
         ));
     }
 });
 
 post('/email-verify', function() {
-    $data = json_decode(file_get_contents("php://input"));
-    if (!empty($data->email) && !empty($data->code)) {
-        \controllers\AuthController::verify($data->email, $data->code);
+    if (!empty($_POST['email']) && !empty($_POST['code'])) {
+        \controllers\AuthController::verify($_POST['email'], $_POST['code']);
     } else {
+        http_response_code(400);
         echo json_encode(
             array
                 (
-                    "message" => "Missing email or code"
+                    "status" => 400,
+                    "message" => "Fill empty fields"
                 )
         );
     }
 });
 
+post('/resend-code', function () {
+    if (!empty($_POST['email'])) {
+        \controllers\AuthController::sendCode($_POST['email']);
+    }
+});
 
 
 
