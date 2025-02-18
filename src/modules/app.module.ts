@@ -8,6 +8,9 @@ import { TestModule } from './test.module';
 import { ProfessionModule } from './professions.module';
 import { AuthModule } from './auth.module';
 import { SectionModule } from './section.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import * as process from 'node:process';
 
 @Module({
   imports: [
@@ -23,6 +26,21 @@ import { SectionModule } from './section.module';
       database: process.env.DB_DATABASE,
       autoLoadModels: true,
       synchronize: true,
+    }),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: process.env.SMTP_TRANSPORT,
+        defaults: {
+          from: '"nest-modules" <modules@nestjs.com>',
+        },
+        template: {
+          dir: __dirname + '/templates',
+          adapter: new PugAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
     UserModule,
     SectionModule,

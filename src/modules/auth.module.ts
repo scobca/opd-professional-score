@@ -10,6 +10,8 @@ import { AuthProvider } from '../providers/auth.provider';
 import { BcryptUtil } from '../utils/bcrypt.util';
 import { jwtConfig } from '../config/jwt.conf';
 import { JwtStrategy } from '../strategies/jwt.strategy';
+import { AuthCodesStrategy } from '../strategies/auth-codes.strategy';
+import { CodeGeneratorUtil } from '../utils/code-generator.util';
 
 @Module({
   imports: [
@@ -22,7 +24,13 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthProvider, BcryptUtil, JwtStrategy],
-  exports: [JwtModule, AuthProvider],
+  providers: [
+    AuthProvider,
+    JwtStrategy,
+    BcryptUtil,
+    AuthCodesStrategy,
+    CodeGeneratorUtil,
+  ],
+  exports: [JwtModule],
 })
 export class AuthModule {}

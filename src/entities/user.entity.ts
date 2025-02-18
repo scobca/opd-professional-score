@@ -10,7 +10,6 @@ import {
   Unique,
 } from 'sequelize-typescript';
 import { Roles } from '../config/enums/roles.enum';
-import { VerificationCodes } from './verification-codes.entity';
 import { Profession } from './professions.entity';
 import { Test } from './test.entity';
 import { TestToUserDashboard } from './test-to-user-dashboard.entity';
@@ -44,9 +43,6 @@ export class User extends Model {
 
   @HasMany(() => TestBlock)
   testBlocks: TestBlock[];
-
-  @HasMany(() => VerificationCodes)
-  verificationCodes: VerificationCodes;
 
   @HasMany(() => Profession)
   professions: Profession[];
