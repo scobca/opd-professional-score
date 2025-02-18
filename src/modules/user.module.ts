@@ -8,6 +8,8 @@ import { BcryptUtil } from '../utils/bcrypt.util';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from '../config/jwt.conf';
 import { MailerProvider } from '../providers/mailer.provider';
+import { CodeGeneratorUtil } from '../utils/code-generator.util';
+import { AuthCodesStrategy } from '../strategies/auth-codes.strategy';
 
 @Module({
   imports: [
@@ -17,8 +19,14 @@ import { MailerProvider } from '../providers/mailer.provider';
       signOptions: { expiresIn: jwtConfig.expiresIn },
     }),
   ],
-  providers: [UserProvider, BcryptUtil, MailerProvider],
+  providers: [
+    UserProvider,
+    BcryptUtil,
+    MailerProvider,
+    AuthCodesStrategy,
+    CodeGeneratorUtil,
+  ],
   controllers: [UserController],
-  exports: [UserProvider, BcryptUtil, MailerProvider],
+  exports: [UserProvider, MailerProvider],
 })
 export class UserModule {}
