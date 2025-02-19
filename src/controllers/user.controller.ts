@@ -32,6 +32,17 @@ export class UserController {
     return new BasicSuccessfulResponse<User[]>(users);
   }
 
+  @Get('getAllUsersAdmin')
+  public async getAllUsersAdmin(): Promise<BasicSuccessfulResponse<User[]>> {
+    const users = await this.userProvider.getAllUsers();
+    return users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    }));
+  }
+
   @Get('/getUserById')
   public async getUserById(
     @Body() data: { id: number },
