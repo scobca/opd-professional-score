@@ -42,7 +42,27 @@ export class TestController {
     }));
   }
 
-  @Get('/allTestsByUserId')
+  @Get('/getAllSolvedTests')
+  public async getAllSolvedTests() {
+    const tests = await TestToUserDashboard.findAll();
+    const res: CustomTestOutputAdmin[] = [];
+
+    await Promise.all(
+      tests.map(async (test) => {
+        const unit = await this.testProvider.getTestById(test.testId);
+        res.push({
+          id: unit.id,
+          name: unit.name,
+          header: unit.header,
+          createdAt: unit.createdAt as string,
+        });
+      }),
+    );
+
+    return res;
+  }
+
+  @Get('/getAllTestsByUserId')
   public async getAllTestsByUserId(@Body() data: { id: number }) {
     const tests = await TestToUserDashboard.findAll({
       where: { userId: data.id },
