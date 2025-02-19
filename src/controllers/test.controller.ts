@@ -29,6 +29,17 @@ export class TestController {
     return await this.testProvider.getAllTests();
   }
 
+  @Get('/getAllTestsAdmin')
+  public async getAllTestsAdmin() {
+    const tests = await this.testProvider.getAllTests();
+    return tests.map((test) => ({
+      id: test.id,
+      name: test.name,
+      header: test.header,
+      createdAt: test.createdAt as string,
+    }));
+  }
+
   @Get('/getTestById')
   public async getTestById(@Body() data: { id: number }) {
     return await this.testProvider.getTestById(data.id);
