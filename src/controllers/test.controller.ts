@@ -15,6 +15,8 @@ import { CreateTestDto } from '../dto/test/create-test.dto';
 import { UpdateTestDto } from '../dto/test/update-test.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
+import { TestToUserDashboard } from '../entities/test-to-user-dashboard.entity';
+import { CustomTestOutputAdmin } from '../IO/custom/custom-test-output-admin';
 
 @Controller('/test')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -38,6 +40,28 @@ export class TestController {
       header: test.header,
       createdAt: test.createdAt as string,
     }));
+  }
+
+  @Get('/allTestsByUserId')
+  public async getAllTestsByUserId(@Body() data: { id: number }) {
+    const tests = await TestToUserDashboard.findAll({
+      where: { userId: data.id },
+    });
+    const res: CustomTestOutputAdmin[] = [];
+
+    await Promise.all(
+      tests.map(async (test) => {
+        const unit = await this.testProvider.getTestById(test.testId);
+        res.push({
+          id: unit.id,
+          name: unit.name,
+          header: unit.header,
+          createdAt: unit.createdAt as string,
+        });
+      }),
+    );
+
+    return res;
   }
 
   @Get('/getTestById')
