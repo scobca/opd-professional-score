@@ -50,6 +50,12 @@ class User
         return $this->fillData($stmt);
     }
 
+    public function getAll(): array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 
     public function generateConfirmCode(string $email): ?int
     {
@@ -64,6 +70,14 @@ class User
             return $code;
         }
         return null;
+    }
+
+    public function updateRoleById(int $id, string $role):void
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE users SET role = ? WHERE id = ?"
+        );
+        $stmt->execute([$role, $id]);
     }
 
     public function deleteConfirmCode(string $email): bool
