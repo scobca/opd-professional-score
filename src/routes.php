@@ -78,11 +78,18 @@ post('/resend-code', function () {
 });
 
 post('/update-role', function () {
-    if (!empty($_POST['new_role']) && !empty($_POST['admin_email'] && !empty($_POST['user_id']))) {
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($_POST['new_role']) && !empty($_POST['user_id']) && !empty($jwt)) {
         $role = htmlspecialchars(trim($_POST['new_role']));
-        $admin = htmlspecialchars(trim($_POST['admin_email']));
         $id = htmlspecialchars(trim($_POST['user_id']));
-        UserController::updateRoleByID($id, $role, $admin);
+        UserController::updateRoleByID($id, $role, $jwt);
+    } else {
+        http_response_code(400);
+        echo json_encode(array(
+            "status" => 400,
+            "message" => "Fill empty fields",
+        ));
     }
 });
 
