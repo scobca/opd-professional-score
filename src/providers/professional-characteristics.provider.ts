@@ -42,6 +42,7 @@ export class ProfessionalCharacteristicsProvider {
     const newProfChar = await ProfessionalCharacteristics.create({
       name: data.name,
       description: data.description,
+      PCType: data.pcType,
     });
 
     const res = {
