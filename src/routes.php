@@ -1,7 +1,5 @@
 <?php
 
-use controllers\UserController;
-
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
@@ -12,6 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once __DIR__ . '/router.php';
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/AuthController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/UserController.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/controllers/ProfessionController.php";
 
 post('/sign-in', function () {
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -83,7 +82,7 @@ post('/update-role', function () {
     if (!empty($_POST['new_role']) && !empty($_POST['user_id']) && !empty($jwt)) {
         $role = htmlspecialchars(trim($_POST['new_role']));
         $id = htmlspecialchars(trim($_POST['user_id']));
-        UserController::updateRoleByID($id, $role, $jwt);
+        \controllers\UserController::updateRoleByID($id, $role, $jwt);
     } else {
         http_response_code(400);
         echo json_encode(array(
@@ -94,7 +93,21 @@ post('/update-role', function () {
 });
 
 get('/get-users-all', function () {
-   \controllers\UserController::getAllUsers();
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($jwt)) {
+        \controllers\UserController::getAllUsers($jwt);
+    } else {
+        http_response_code(401);
+        echo json_encode(array(
+            "status" => 401,
+            "message" => "You are not authorized to access this data",
+        ));
+    }
+});
+
+get('/get-professions-all', function () {
+    \controllers\ProfessionController::getAllProfessions();
 });
 
 

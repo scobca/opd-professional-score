@@ -396,7 +396,7 @@ class SMTP
     protected function getSMTPConnection($host, $port = null, $timeout = 30, $options = [])
     {
         static $streamok;
-        //This is enabled by default since 5.0.0 but some providers disable it
+        //This is enabled by default since 5.0.0 but some utils disable it
         //Check this once and cache the result
         if (null === $streamok) {
             $streamok = function_exists('stream_socket_client');

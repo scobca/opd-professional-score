@@ -2,50 +2,52 @@
 
 namespace controllers;
 
-use libs\jwt\JWT;
-use libs\jwt\Key;
+use utils\JWTHandler;
 use models\Database;
 use models\User;
 use PDOException;
 
 class UserController
 {
-    public static function getAllUsers(): void
+    public static function getAllUsers(string $jwt): void
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/User.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/utils/JWTHandler.php";
 
-        $db = new Database();
-        $conn = $db->getConnection();
-        $user = new User($conn);
+        $credentials = JWTHandler::getJWTData($jwt);
+        if ($credentials["role"] == "admin") {
+            $db = new Database();
+            $conn = $db->getConnection();
+            $user = new User($conn);
 
-        try {
-            $users = $user -> getAll();
-            echo json_encode($users);
-        } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(
-                [
-                    "status" => 500,
-                    'message' => $e->getMessage()
-                ]);
+            try {
+                $users = $user -> getAll();
+                echo json_encode($users);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(
+                    [
+                        "status" => 500,
+                        'message' => $e->getMessage()
+                    ]);
+            }
+        } else {
+            http_response_code(403);
+            echo json_encode([
+                "status" => 403,
+                "message" => "You don't have permission to access this info"
+            ]);
         }
+
     }
 
     public static function updateRoleById(int $id, string $newRole, string $jwt): void
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/User.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/config/core.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/JWTExceptionWithPayloadInterface.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/BeforeValidException.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/ExpiredException.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/SignatureInvalidException.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/Key.php";
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/libs/jwt/JWT.php";
-
-        $decoded = (array) JWT::decode($jwt, new Key($key, 'HS256'));
-        $credentials = (array) $decoded["data"];
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/utils/JWTHandler.php";
+        $credentials = JWTHandler::getJWTData($jwt);
         $db = new Database();
         $conn = $db->getConnection();
         $user = new User($conn);
