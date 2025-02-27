@@ -92,6 +92,24 @@ post('/update-role', function () {
     }
 });
 
+post('/update-profession', function () {
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($_POST['profession_id']) && !empty($_POST['profession_name']) &&
+        !empty($_POST['profession_description']) && !empty($jwt)) {
+        $id = htmlspecialchars(trim($_POST['profession_id']));
+        $name = htmlspecialchars(trim($_POST['profession_name']));
+        $description = htmlspecialchars(trim($_POST['profession_description']));
+        \controllers\ProfessionController::updateProfessionById($id, $name, $description, $jwt);
+    } else {
+        http_response_code(400);
+        echo json_encode(array(
+            "status" => 400,
+            "message" => "Fill empty fields",
+        ));
+    }
+});
+
 get('/get-users-all', function () {
     $bearer = getallheaders()["Authorization"];
     $jwt = preg_split("/\s+/", $bearer)[1];
