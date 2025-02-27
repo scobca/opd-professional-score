@@ -10,10 +10,10 @@ import {
   Unique,
 } from 'sequelize-typescript';
 import { Roles } from '../config/enums/roles.enum';
-import { Profession } from './professions.entity';
 import { Test } from './test.entity';
 import { TestToUserDashboard } from './test-to-user-dashboard.entity';
 import { TestBlock } from './test-blocks.entity';
+import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
 
 @Table({ tableName: 'user' })
 export class User extends Model {
@@ -44,8 +44,8 @@ export class User extends Model {
   @HasMany(() => TestBlock)
   testBlocks: TestBlock[];
 
-  @HasMany(() => Profession)
-  professions: Profession[];
+  @HasMany(() => ProfessionToProfessionalCharacteristics)
+  professionToProfessionalCharacteristics: ProfessionToProfessionalCharacteristics[];
 
   @BelongsToMany(() => Test, () => TestToUserDashboard)
   tests: Test[];

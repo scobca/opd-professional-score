@@ -1,14 +1,11 @@
 import {
   AutoIncrement,
-  BelongsTo,
   BelongsToMany,
   Column,
-  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { User } from './user.entity';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionToTestBlock } from './profession-to-test-block.entity';
 import { ProfessionalCharacteristics } from './professional-characteristics.entity';
@@ -26,13 +23,6 @@ export class Profession extends Model {
 
   @Column({ allowNull: false })
   description: string;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId: number;
-
-  @BelongsTo(() => User)
-  user: User;
 
   @BelongsToMany(
     () => ProfessionalCharacteristics,
