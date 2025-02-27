@@ -5,7 +5,6 @@ import { UserProvider } from './user.provider';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
-import { ProfessionToProfessionalCharacteristics } from '../entities/profession-to-professional-characteristics.entity';
 import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
 
@@ -31,31 +30,10 @@ export class ProfessionProvider {
     return profession;
   }
 
-  public async getProfessionByAuthorId(
-    id: number,
-  ): Promise<Profession[] | null> {
-    await this.userProvider.getUserById(id);
-    return await Profession.findAll({
-      where: { authorId: id },
-      include: [ProfessionalCharacteristics],
-    });
-  }
-
   public async createProfession(
     data: CreateProfessionDto,
-    authorId: number,
   ): Promise<BasicSuccessfulResponse<Profession>> {
-    const profession = await Profession.create({ ...data, authorId });
-
-    await Promise.all(
-      data.profChar.map(async (char) => {
-        await this.profCharProvider.getProfCharById(char.profCharId);
-        await ProfessionToProfessionalCharacteristics.create({
-          professionId: profession.id,
-          professionalCharacteristicsId: char.profCharId,
-        });
-      }),
-    );
+    const profession = await Profession.create({ ...data });
 
     const res = {
       message: 'Profession created successfully.',
@@ -70,31 +48,7 @@ export class ProfessionProvider {
     const profession = await this.getProfessionById(data.id);
     const updatedData = data.updatedData;
 
-    if (updatedData.newProfChar != null) {
-      await Promise.all(
-        updatedData.newProfChar.map(async (char) => {
-          await this.profCharProvider.getProfCharById(char.profCharId);
-          await ProfessionToProfessionalCharacteristics.create({
-            professionId: profession.id,
-            professionalCharacteristicsId: char.profCharId,
-          });
-        }),
-      );
-    }
-
-    if (updatedData.removableProfChar != null) {
-      await Promise.all(
-        updatedData.removableProfChar.map(async (char) => {
-          await this.profCharProvider.getProfCharById(char.profCharId);
-          await ProfessionToProfessionalCharacteristics.destroy({
-            where: {
-              professionId: data.id,
-              professionalCharacteristicsId: char.profCharId,
-            },
-          });
-        }),
-      );
-    }
+    await Profession.update({ ...updatedData }, { where: { id: data.id } });
 
     const res = {
       message: 'Profession updated successfully.',
