@@ -1,29 +1,21 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Profession } from '../entities/professions.entity';
 import { ProfessionNotFoundException } from '../exceptions/professions/profession-not-found.exception';
-import { UserProvider } from './user.provider';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
-import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
-import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
 
 @Injectable()
 export class ProfessionProvider {
-  constructor(
-    @Inject(UserProvider) private userProvider: UserProvider,
-    @Inject(ProfessionalCharacteristicsProvider)
-    private profCharProvider: ProfessionalCharacteristicsProvider,
-  ) {}
+  constructor() {}
 
   public async getAll(): Promise<Profession[]> {
-    return await Profession.findAll({ include: [ProfessionalCharacteristics] });
+    return await Profession.findAll();
   }
 
   public async getProfessionById(id: number): Promise<Profession> {
     const profession = await Profession.findOne({
       where: { id: id },
-      include: [ProfessionalCharacteristics],
     });
     if (profession == null) throw new ProfessionNotFoundException(id, 'id');
 

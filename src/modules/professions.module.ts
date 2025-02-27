@@ -27,6 +27,10 @@ import { UserModule } from './user.module';
     JwtDecoderUtil,
   ],
   controllers: [ProfessionalCharacteristicsController, ProfessionController],
-  exports: [],
+  exports: [
+    ProfessionalCharacteristicsProvider,
+    ProfessionProvider,
+    JwtDecoderUtil,
+  ],
 })
 export class ProfessionModule {}
