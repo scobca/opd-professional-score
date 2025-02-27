@@ -38,13 +38,16 @@ export class AverageProfessionRatingStrategy {
             score += el.score;
           }),
         );
+        const averageScore = score / professionToPC.length;
 
         res.push({
           professionId: profession.id,
           professionName: profession.name,
+          professionDescription: profession.description,
           pcName: pc.name,
-          averageScore: score / professionToPC.length,
-        } as ProfessionStatsOutput);
+          pcDescription: pc.description,
+          averageScore: isNaN(averageScore) ? 0 : averageScore,
+        });
       }),
     );
 
