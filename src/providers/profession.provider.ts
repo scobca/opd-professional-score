@@ -5,9 +5,9 @@ import { UserProvider } from './user.provider';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
-import { ProfessionToProfessionalCharacteristics } from '../entities/profession-to-professional-characteristics.entity';
 import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
+import { ProfessionScores } from '../entities/profession_scores.entity';
 
 @Injectable()
 export class ProfessionProvider {
@@ -50,7 +50,7 @@ export class ProfessionProvider {
     await Promise.all(
       data.profChar.map(async (char) => {
         await this.profCharProvider.getProfCharById(char.profCharId);
-        await ProfessionToProfessionalCharacteristics.create({
+        await ProfessionScores.create({
           professionId: profession.id,
           professionalCharacteristicsId: char.profCharId,
         });
@@ -74,7 +74,7 @@ export class ProfessionProvider {
       await Promise.all(
         updatedData.newProfChar.map(async (char) => {
           await this.profCharProvider.getProfCharById(char.profCharId);
-          await ProfessionToProfessionalCharacteristics.create({
+          await ProfessionScores.create({
             professionId: profession.id,
             professionalCharacteristicsId: char.profCharId,
           });
@@ -86,7 +86,7 @@ export class ProfessionProvider {
       await Promise.all(
         updatedData.removableProfChar.map(async (char) => {
           await this.profCharProvider.getProfCharById(char.profCharId);
-          await ProfessionToProfessionalCharacteristics.destroy({
+          await ProfessionScores.destroy({
             where: {
               professionId: data.id,
               professionalCharacteristicsId: char.profCharId,
