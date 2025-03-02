@@ -3,7 +3,10 @@ import { Profession } from '../entities/professions.entity';
 import { ProfessionNotFoundException } from '../exceptions/professions/profession-not-found.exception';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
+import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
+import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
+import { ProfessionScores } from '../entities/profession_scores.entity';
 
 @Injectable()
 export class ProfessionProvider {
@@ -25,6 +28,7 @@ export class ProfessionProvider {
   public async createProfession(
     data: CreateProfessionDto,
   ): Promise<BasicSuccessfulResponse<Profession>> {
+
     const profession = await Profession.create({ ...data });
 
     const res = {
