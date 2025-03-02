@@ -4,7 +4,7 @@ import { ProfessionStatsOutput } from '../IO/custom/profession-stats.output';
 import { CreateProfessionStats } from '../dto/service/create-profession-stats.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { ProfessionScores } from '../entities/profession_scores.entity';
-import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
+import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
@@ -24,11 +24,9 @@ export class ProfessionsStatisticProvider {
   public async createStats(data: CreateProfessionStats[]) {
     await Promise.all(
       data.map(async (el) => {
-        try {
-          await ProfessionalCharacteristics.findOne({
-            where: { id: el.pcId },
-          });
+        await this.checkValid(el.professionId, el.pcId, el.userId);
 
+        try {
           await ProfessionScores.create({
             professionId: el.professionId,
             profCharId: el.pcId,
@@ -42,5 +40,20 @@ export class ProfessionsStatisticProvider {
     );
 
     return new BasicSuccessfulResponse('Stats created successfully.');
+  }
+
+  private async checkValid(professionId: number, pcId: number, userId: number) {
+    const el = await ProfessionScores.findOne({
+      where: {
+        professionId: professionId,
+        profCharId: pcId,
+        userId: userId,
+      },
+    });
+
+    if (el != null)
+      throw new DoubleRecordException(
+        'Estimation with that params already exists',
+      );
   }
 }
