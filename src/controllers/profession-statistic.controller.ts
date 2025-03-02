@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Inject } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ProfessionsStatisticProvider } from '../providers/professions-statistic.provider';
+import { CreateProfessionStats } from '../dto/service/create-profession-stats.dto';
 
 @Controller('/professionStatistic')
 export class ProfessionStatisticController {
@@ -15,8 +16,8 @@ export class ProfessionStatisticController {
     );
   }
 
-  @Get('hello')
-  public hello() {
-    return 'Hello World!';
+  @Post('/createStats')
+  public async createStats(@Body() data: CreateProfessionStats[]) {
+    return await this.professionStatisticProvider.createStats(data);
   }
 }

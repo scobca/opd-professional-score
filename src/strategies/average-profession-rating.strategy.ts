@@ -43,6 +43,7 @@ export class AverageProfessionRatingStrategy {
           professionId: profession.id,
           professionName: profession.name,
           professionDescription: profession.description,
+          pcId: pc.id,
           pcName: pc.name,
           pcDescription: pc.description,
           averageScore: isNaN(averageScore) ? 0 : averageScore,

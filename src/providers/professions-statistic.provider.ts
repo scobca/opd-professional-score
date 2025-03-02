@@ -4,6 +4,7 @@ import { ProfessionStatsOutput } from '../IO/custom/profession-stats.output';
 import { CreateProfessionStats } from '../dto/service/create-profession-stats.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { ProfessionScores } from '../entities/profession_scores.entity';
+import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
@@ -15,18 +16,28 @@ export class ProfessionsStatisticProvider {
   public async getStaticForProfession(
     id: number,
   ): Promise<ProfessionStatsOutput[]> {
-    return this.averageProfessionRatingStrategy.getStatistics(id);
+    const res = await this.averageProfessionRatingStrategy.getStatistics(id);
+
+    return res.sort((a, b) => a.pcId - b.pcId);
   }
 
   public async createStats(data: CreateProfessionStats[]) {
     await Promise.all(
       data.map(async (el) => {
-        await ProfessionScores.create({
-          professionId: el.professionId,
-          profCharId: el.pcId,
-          userid: el.userId,
-          score: el.score,
-        });
+        try {
+          await ProfessionalCharacteristics.findOne({
+            where: { id: el.pcId },
+          });
+
+          await ProfessionScores.create({
+            professionId: el.professionId,
+            profCharId: el.pcId,
+            userId: el.userId,
+            score: el.score,
+          });
+        } catch (e: any) {
+          console.error(e);
+        }
       }),
     );
 
