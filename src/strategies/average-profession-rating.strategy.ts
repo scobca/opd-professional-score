@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessionalCharacteristics } from '../entities/professional-characteristics.entity';
-import { ProfessionToProfessionalCharacteristics } from '../entities/profession-to-professional-characteristics.entity';
 import { ProfessionStatsOutput } from '../IO/custom/profession-stats.output';
 import { Profession } from '../entities/professions.entity';
 import { ProfessionNotFoundException } from '../exceptions/professions/profession-not-found.exception';
+import { ProfessionScores } from '../entities/profession_scores.entity';
 
 @Injectable()
 export class AverageProfessionRatingStrategy {
@@ -25,13 +25,12 @@ export class AverageProfessionRatingStrategy {
       profChar.map(async (pc) => {
         let score = 0;
 
-        const professionToPC =
-          await ProfessionToProfessionalCharacteristics.findAll({
-            where: {
-              professionId: professionId,
-              professionalCharacteristicsId: pc.id,
-            },
-          });
+        const professionToPC = await ProfessionScores.findAll({
+          where: {
+            professionId: professionId,
+            profCharId: pc.id,
+          },
+        });
 
         await Promise.all(
           professionToPC.map((el) => {
