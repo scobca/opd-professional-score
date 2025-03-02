@@ -5,6 +5,8 @@ import { CreateProfessionStats } from '../dto/service/create-profession-stats.dt
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { ProfessionScores } from '../entities/profession_scores.entity';
 import { DoubleRecordException } from '../exceptions/common/double-record.exception';
+import { UpdateProfessionStats } from '../dto/service/update-profession-stats.dto';
+import { ProfessionScoreNotFound } from '../exceptions/service/profession-score-not-found.exception';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
@@ -40,6 +42,36 @@ export class ProfessionsStatisticProvider {
     );
 
     return new BasicSuccessfulResponse('Stats created successfully.');
+  }
+
+  public async updateStats(data: UpdateProfessionStats[]) {
+    await Promise.all(
+      data.map(async (el) => {
+        const e = await ProfessionScores.findOne({
+          where: {
+            professionId: el.professionId,
+            profCharId: el.profCharId,
+            userId: el.userId,
+          },
+        });
+        if (e == null) throw new ProfessionScoreNotFound();
+
+        if (e.score != el.score) {
+          await ProfessionScores.update(
+            {
+              score: el.score,
+            },
+            {
+              where: {
+                professionId: el.professionId,
+                profCharId: el.profCharId,
+                userId: el.userId,
+              },
+            },
+          );
+        }
+      }),
+    );
   }
 
   private async checkValid(professionId: number, pcId: number, userId: number) {
