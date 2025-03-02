@@ -27,6 +27,10 @@ import { ProfessionScores } from '../entities/profession_scores.entity';
     JwtDecoderUtil,
   ],
   controllers: [ProfessionalCharacteristicsController, ProfessionController],
-  exports: [],
+  exports: [
+    ProfessionalCharacteristicsProvider,
+    ProfessionProvider,
+    JwtDecoderUtil,
+  ],
 })
 export class ProfessionModule {}
