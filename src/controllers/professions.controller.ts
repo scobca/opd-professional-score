@@ -6,7 +6,6 @@ import {
   Inject,
   Patch,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ProfessionProvider } from '../providers/profession.provider';
@@ -35,14 +34,8 @@ export class ProfessionController {
   }
 
   @Post('/createProfession')
-  public async createProfession(
-    @Body() data: CreateProfessionDto,
-    @Req() req: Request,
-  ) {
-    const jwt = this.jwtDecoderUtil.decode(req);
-    if (jwt && 'id' in jwt && typeof jwt.id === 'number') {
-      return await this.professionProvider.createProfession(data, jwt.id);
-    }
+  public async createProfession(@Body() data: CreateProfessionDto) {
+    return await this.professionProvider.createProfession(data);
   }
 
   @Patch('/updateProfession')

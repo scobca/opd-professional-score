@@ -11,8 +11,8 @@ import { Profession } from './professions.entity';
 import { ProfessionalCharacteristics } from './professional-characteristics.entity';
 import { User } from './user.entity';
 
-@Table({ tableName: 'professions-to-professional-characteristics' })
-export class ProfessionToProfessionalCharacteristics extends Model {
+@Table({ tableName: 'profession_scores' })
+export class ProfessionScores extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
@@ -22,9 +22,15 @@ export class ProfessionToProfessionalCharacteristics extends Model {
   @Column
   professionId: number;
 
+  @BelongsTo(() => Profession)
+  profession: Profession;
+
   @ForeignKey(() => ProfessionalCharacteristics)
   @Column
-  professionalCharacteristicsId: number;
+  profCharId: number;
+
+  @BelongsTo(() => ProfessionalCharacteristics)
+  professionalCharacteristics: ProfessionalCharacteristics;
 
   @ForeignKey(() => User)
   @Column
@@ -33,6 +39,6 @@ export class ProfessionToProfessionalCharacteristics extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @Column
+  @Column({ allowNull: false })
   score: number;
 }

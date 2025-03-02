@@ -1,15 +1,14 @@
 import {
   AutoIncrement,
-  BelongsToMany,
   Column,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { Profession } from './professions.entity';
-import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
+import { ProfessionScores } from './profession_scores.entity';
 import { PcTypesEnum } from '../config/enums/pc-types.enum';
 
 @Table({ tableName: 'professional_characteristics' })
@@ -32,9 +31,6 @@ export class ProfessionalCharacteristics extends Model {
   })
   PCType: PcTypesEnum;
 
-  @BelongsToMany(
-    () => Profession,
-    () => ProfessionToProfessionalCharacteristics,
-  )
-  profession: Profession[];
+  @HasMany(() => ProfessionScores)
+  professionScores: ProfessionScores[];
 }
