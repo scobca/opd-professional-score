@@ -6,10 +6,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ProfessionalCharacteristicsProvider } from '../providers/professional-characteristics.provider';
 import { ProfessionalCharacteristicsController } from '../controllers/professional-characteristics.controller';
 import { ProfessionProvider } from '../providers/profession.provider';
-import { ProfessionToProfessionalCharacteristics } from '../entities/profession-to-professional-characteristics.entity';
 import { ProfessionController } from '../controllers/professions.controller';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UserModule } from './user.module';
+import { ProfessionScores } from '../entities/profession-scores.entity';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { UserModule } from './user.module';
       ProfessionalCharacteristics,
       Profession,
       ProfessionToTestBlock,
-      ProfessionToProfessionalCharacteristics,
+      ProfessionScores,
     ]),
     UserModule,
   ],
@@ -27,6 +27,10 @@ import { UserModule } from './user.module';
     JwtDecoderUtil,
   ],
   controllers: [ProfessionalCharacteristicsController, ProfessionController],
-  exports: [],
+  exports: [
+    ProfessionalCharacteristicsProvider,
+    ProfessionProvider,
+    JwtDecoderUtil,
+  ],
 })
 export class ProfessionModule {}

@@ -2,14 +2,14 @@ import {
   AutoIncrement,
   BelongsToMany,
   Column,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionToTestBlock } from './profession-to-test-block.entity';
-import { ProfessionalCharacteristics } from './professional-characteristics.entity';
-import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
+import { ProfessionScores } from './profession-scores.entity';
 
 @Table({ tableName: 'professions' })
 export class Profession extends Model {
@@ -22,13 +22,16 @@ export class Profession extends Model {
   name: string;
 
   @Column({ allowNull: false })
+  requirements: string;
+
+  @Column({ allowNull: false })
+  sphere: string;
+
+  @Column({ allowNull: false })
   description: string;
 
-  @BelongsToMany(
-    () => ProfessionalCharacteristics,
-    () => ProfessionToProfessionalCharacteristics,
-  )
-  professionalCharacteristics: ProfessionalCharacteristics[];
+  @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
+  professionScores: ProfessionScores[];
 
   @BelongsToMany(() => TestBlock, () => ProfessionToTestBlock)
   testBlocks: TestBlock[];

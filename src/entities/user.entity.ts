@@ -13,7 +13,7 @@ import { Roles } from '../config/enums/roles.enum';
 import { Test } from './test.entity';
 import { TestToUserDashboard } from './test-to-user-dashboard.entity';
 import { TestBlock } from './test-blocks.entity';
-import { ProfessionToProfessionalCharacteristics } from './profession-to-professional-characteristics.entity';
+import { ProfessionScores } from './profession-scores.entity';
 
 @Table({ tableName: 'user' })
 export class User extends Model {
@@ -38,14 +38,14 @@ export class User extends Model {
   @Column
   isBanned: boolean;
 
-  @HasMany(() => Test)
+  @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
+  profScores: ProfessionScores[];
+
+  @HasMany(() => Test, { onDelete: 'CASCADE' })
   test: Test[];
 
-  @HasMany(() => TestBlock)
+  @HasMany(() => TestBlock, { onDelete: 'CASCADE' })
   testBlocks: TestBlock[];
-
-  @HasMany(() => ProfessionToProfessionalCharacteristics)
-  professionToProfessionalCharacteristics: ProfessionToProfessionalCharacteristics[];
 
   @BelongsToMany(() => Test, () => TestToUserDashboard)
   tests: Test[];
