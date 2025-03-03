@@ -23,12 +23,26 @@ class Profession
         return $stmt->fetchAll();
     }
 
-    public function create(string $name, string $description): bool
+    public function getById(int $id): bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM professions WHERE id = ?");
+        try {
+            $stmt->execute([$id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->name = $data["name"];
+            $this->description = $data["description"];
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function create(string $name, string $description, string $requirements, string $sphere): bool
     {
         $stmt = $this->db->prepare(
-            "INSERT INTO professions (name, description) VALUES (?, ?)");
+            "INSERT INTO professions (name, description, requirements, sphere) VALUES (?, ?, ?, ?)");
         try {
-            $stmt->execute([$name, $description]);
+            $stmt->execute([$name, $description, $requirements, $sphere]);
             return true;
         } catch (PDOException $e) {
             return false;

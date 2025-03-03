@@ -33,7 +33,30 @@ class ProfessionController
 
     }
 
-    public static function createProfession(string $name, string $description, string $jwt): void
+    public static function getProfessionById(int $id): void
+    {
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Profession.php";
+        include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
+
+        $db = new Database();
+        $conn = $db->getConnection();
+        $profession = new Profession($conn);
+        if ($profession->getById($id)) {
+            http_response_code(200);
+            echo json_encode([
+                "status" => 200,
+                "data" => $profession
+            ]);
+        } else {
+            http_response_code(404);
+            echo json_encode([
+                "status" => 404,
+                "message" => "Profession not found"
+            ]);
+        }
+    }
+
+    public static function createProfession(string $name, string $description, string $requirements, string $sphere, string $jwt): void
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Profession.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
@@ -45,7 +68,7 @@ class ProfessionController
         $credentials = JWTHandler::getJWTData($jwt);
 
         if ($credentials["role"] === "admin" || $credentials["role"] === "expert" || $credentials["role"] === "moderator") {
-            if ($profession->create($name, $description)) {
+            if ($profession->create($name, $description, $requirements, $sphere)) {
                 http_response_code(200);
                 echo json_encode([
                     "status" => 200,

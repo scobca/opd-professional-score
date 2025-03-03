@@ -11,6 +11,7 @@ require_once __DIR__ . '/router.php';
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/AuthController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/UserController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/ProfessionController.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/controllers/PvkController.php";
 
 post('/sign-in', function () {
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -113,10 +114,13 @@ post('/update-profession', function () {
 post('/create-profession', function () {
     $bearer = getallheaders()["Authorization"];
     $jwt = preg_split("/\s+/", $bearer)[1];
-    if (!empty($_POST['profession_name']) && !empty($_POST['profession_description']) && !empty($jwt)) {
-        $name = htmlspecialchars(trim($_POST['profession_name']));
-        $description = htmlspecialchars(trim($_POST['profession_description']));
-        \controllers\ProfessionController::createProfession($name, $description, $jwt);
+    if (!empty($_POST['name']) && !empty($_POST['description']) && !empty($jwt)
+    && !empty($_POST['requirements']) && !empty($_POST['sphere'])) {
+        $name = htmlspecialchars(trim($_POST['name']));
+        $description = htmlspecialchars(trim($_POST['description']));
+        $requirements = htmlspecialchars(trim($_POST['requirements']));
+        $sphere = htmlspecialchars(trim($_POST['sphere']));
+        \controllers\ProfessionController::createProfession($name, $description, $requirements, $sphere, $jwt);
     } else {
         http_response_code(400);
         echo json_encode(array(
@@ -140,12 +144,28 @@ get('/get-users-all', function () {
     }
 });
 
+get('/get-pvk-all', function () {
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($jwt)) {
+        \controllers\PvkController::getPvkAll($jwt);
+    } else {
+        http_response_code(401);
+        echo json_encode(array(
+            "status" => 401,
+            "message" => "You are not authorized to access this data",
+        ));
+    }
+});
+
 get('/get-professions-all', function () {
     \controllers\ProfessionController::getAllProfessions();
 });
 
 
-
+get('/profession/$id', function ($id) {
+    \controllers\ProfessionController::getProfessionById($id);
+});
 
 
 
