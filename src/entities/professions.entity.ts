@@ -22,6 +22,12 @@ export class Profession extends Model {
   name: string;
 
   @Column({ allowNull: false })
+  requirements: string;
+
+  @Column({ allowNull: false })
+  sphere: string;
+
+  @Column({ allowNull: false })
   description: string;
 
   @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
