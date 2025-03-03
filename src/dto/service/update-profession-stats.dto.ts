@@ -1,6 +1,6 @@
 export class UpdateProfessionStats {
   professionId: number;
-  profCharId: number;
+  pcId: number;
   userId: number;
   score: number;
 }

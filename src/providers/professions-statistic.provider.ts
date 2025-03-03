@@ -7,12 +7,19 @@ import { ProfessionScores } from '../entities/profession-scores.entity';
 import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 import { UpdateProfessionStats } from '../dto/service/update-profession-stats.dto';
 import { ProfessionScoreNotFound } from '../exceptions/service/profession-score-not-found.exception';
+import { ProfessionProvider } from './profession.provider';
+import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
+import { UserProvider } from './user.provider';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
   constructor(
     @Inject(AverageProfessionRatingStrategy)
     private averageProfessionRatingStrategy: AverageProfessionRatingStrategy,
+    @Inject(ProfessionProvider) private professionProvider: ProfessionProvider,
+    @Inject(ProfessionalCharacteristicsProvider)
+    private professionalCharacteristicsProvider: ProfessionalCharacteristicsProvider,
+    @Inject(UserProvider) private userProvider: UserProvider,
   ) {}
 
   public async getStaticForProfession(
@@ -26,18 +33,15 @@ export class ProfessionsStatisticProvider {
   public async createStats(data: CreateProfessionStats[]) {
     await Promise.all(
       data.map(async (el) => {
-        await this.checkValid(el.professionId, el.pcId, el.userId);
+        await this.checkComponentsValid(el.professionId, el.pcId, el.userId);
+        await this.checkDoubleRecord(el.professionId, el.pcId, el.userId);
 
-        try {
-          await ProfessionScores.create({
-            professionId: el.professionId,
-            profCharId: el.pcId,
-            userId: el.userId,
-            score: el.score,
-          });
-        } catch (e: any) {
-          console.error(e);
-        }
+        await ProfessionScores.create({
+          professionId: el.professionId,
+          profCharId: el.pcId,
+          userId: el.userId,
+          score: el.score,
+        });
       }),
     );
 
@@ -47,10 +51,12 @@ export class ProfessionsStatisticProvider {
   public async updateStats(data: UpdateProfessionStats[]) {
     await Promise.all(
       data.map(async (el) => {
+        await this.checkComponentsValid(el.professionId, el.pcId, el.userId);
+
         const e = await ProfessionScores.findOne({
           where: {
             professionId: el.professionId,
-            profCharId: el.profCharId,
+            profCharId: el.pcId,
             userId: el.userId,
           },
         });
@@ -64,7 +70,7 @@ export class ProfessionsStatisticProvider {
             {
               where: {
                 professionId: el.professionId,
-                profCharId: el.profCharId,
+                profCharId: el.pcId,
                 userId: el.userId,
               },
             },
@@ -72,9 +78,24 @@ export class ProfessionsStatisticProvider {
         }
       }),
     );
+    return new BasicSuccessfulResponse('Stats updated successfully.');
   }
 
-  private async checkValid(professionId: number, pcId: number, userId: number) {
+  private async checkComponentsValid(
+    professionId: number,
+    pcId: number,
+    userId: number,
+  ) {
+    await this.userProvider.getUserById(userId);
+    await this.professionProvider.getProfessionById(professionId);
+    await this.professionalCharacteristicsProvider.getProfCharById(pcId);
+  }
+
+  private async checkDoubleRecord(
+    professionId: number,
+    pcId: number,
+    userId: number,
+  ) {
     const el = await ProfessionScores.findOne({
       where: {
         professionId: professionId,
