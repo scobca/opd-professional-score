@@ -8,7 +8,7 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { ProfessionScores } from './profession_scores.entity';
+import { ProfessionScores } from './profession-scores.entity';
 import { PcTypesEnum } from '../config/enums/pc-types.enum';
 
 @Table({ tableName: 'professional_characteristics' })
@@ -31,6 +31,6 @@ export class ProfessionalCharacteristics extends Model {
   })
   PCType: PcTypesEnum;
 
-  @HasMany(() => ProfessionScores)
+  @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
   professionScores: ProfessionScores[];
 }

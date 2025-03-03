@@ -3,7 +3,7 @@ import { ProfessionalCharacteristics } from '../entities/professional-characteri
 import { ProfessionStatsOutput } from '../IO/custom/profession-stats.output';
 import { Profession } from '../entities/professions.entity';
 import { ProfessionNotFoundException } from '../exceptions/professions/profession-not-found.exception';
-import { ProfessionScores } from '../entities/profession_scores.entity';
+import { ProfessionScores } from '../entities/profession-scores.entity';
 
 @Injectable()
 export class AverageProfessionRatingStrategy {
