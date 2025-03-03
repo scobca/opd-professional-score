@@ -21,6 +21,6 @@ export class TestTypes extends Model {
   @Column({ allowNull: false })
   description: string;
 
-  @HasMany(() => Test)
+  @HasMany(() => Test, { onDelete: 'CASCADE' })
   tests: Test[];
 }

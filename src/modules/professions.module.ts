@@ -9,7 +9,7 @@ import { ProfessionProvider } from '../providers/profession.provider';
 import { ProfessionController } from '../controllers/professions.controller';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UserModule } from './user.module';
-import { ProfessionScores } from '../entities/profession_scores.entity';
+import { ProfessionScores } from '../entities/profession-scores.entity';
 
 @Module({
   imports: [

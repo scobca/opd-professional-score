@@ -9,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionToTestBlock } from './profession-to-test-block.entity';
-import { ProfessionScores } from './profession_scores.entity';
+import { ProfessionScores } from './profession-scores.entity';
 
 @Table({ tableName: 'professions' })
 export class Profession extends Model {
@@ -24,7 +24,7 @@ export class Profession extends Model {
   @Column({ allowNull: false })
   description: string;
 
-  @HasMany(() => ProfessionScores)
+  @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
   professionScores: ProfessionScores[];
 
   @BelongsToMany(() => TestBlock, () => ProfessionToTestBlock)

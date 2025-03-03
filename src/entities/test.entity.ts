@@ -57,7 +57,7 @@ export class Test extends Model {
   @BelongsTo(() => TestTypes)
   testType: TestTypes;
 
-  @HasMany(() => Section)
+  @HasMany(() => Section, { onDelete: 'CASCADE' })
   sections: Section[];
 
   @BelongsToMany(() => TestBlock, () => TestToTestBlock)

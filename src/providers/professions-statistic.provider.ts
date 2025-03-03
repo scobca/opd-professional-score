@@ -3,7 +3,7 @@ import { AverageProfessionRatingStrategy } from '../strategies/average-professio
 import { ProfessionStatsOutput } from '../IO/custom/profession-stats.output';
 import { CreateProfessionStats } from '../dto/service/create-profession-stats.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
-import { ProfessionScores } from '../entities/profession_scores.entity';
+import { ProfessionScores } from '../entities/profession-scores.entity';
 import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 import { UpdateProfessionStats } from '../dto/service/update-profession-stats.dto';
 import { ProfessionScoreNotFound } from '../exceptions/service/profession-score-not-found.exception';
