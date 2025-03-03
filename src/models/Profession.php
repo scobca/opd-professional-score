@@ -23,6 +23,18 @@ class Profession
         return $stmt->fetchAll();
     }
 
+    public function create(string $name, string $description): bool
+    {
+        $stmt = $this->db->prepare(
+            "INSERT INTO professions (name, description) VALUES (?, ?)");
+        try {
+            $stmt->execute([$name, $description]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
     public function updateById(int $id, string $name, string $description): bool
     {
         $stmt = $this->db->prepare(
