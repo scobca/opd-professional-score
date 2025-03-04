@@ -4,6 +4,7 @@ use models\Database;
 
 include 'models/Database.php';
 include 'models/Pvk.php';
+include 'models/Profession.php';
 
 
 $database = new Database();
@@ -102,6 +103,27 @@ foreach ($create_tables as $table_query) {
         echo $e->getMessage() . "<br>";
     }
 }
+
+$professions_array =[
+  [
+      "Backend-Разработчик",
+      "Разработчик создает серверные приложения для взаимодействия веб-сайта и базы данных. Владение языками программирования, такими как PHP, JavaScript, Java, SQL, Git, и понимание принципов работы баз данных — ключевые навыки.",
+      "Навыки: PHP, JavaScript, Java, SQL, Git. Средняя зарплата: от 180 000 руб.",
+      "IT"
+  ],
+  [
+      "Frontend Разработчик",
+      "Разработчик создает клиентское приложение, внешний вид веб-сайтов. Владение технологиями, такими как HTML, CSS, JavaScript, Git, и понимание принципов работы взаимодействия пользователя и браузера с содержимым веб-страниц.",
+      "Навыки: HTML, CSS, JavaScript, Git. Средняя зарплата: от 170 000 руб.",
+      "IT"
+  ],
+  [
+      "Дизайнер",
+      "Дизайнер создает визуальные концепции, интерфейсы и графику. Работа с инструментами, такими как Adobe Photoshop, Figma, и понимание основ UX/UI — важные аспекты профессии.",
+      "Навыки: Figma, Adobe Photoshop, Illustrator, UX/UI. Средняя зарплата: от 70 000 руб.",
+      "IT"
+  ]
+];
 
 $pvk_array = [
     'personal' => [
@@ -298,4 +320,13 @@ foreach ($pvk_array as $pvk_category) {
         }
     }
     $i++;
+}
+
+foreach ($professions_array as $profession) {
+    try {
+        $profLoader = new \models\Profession($database->getConnection());
+        $profLoader->create($profession[0], $profession[1], $profession[2], $profession[3]);
+    } catch (PDOException $e) {
+        echo $e->getMessage() . "<br>";
+    }
 }
