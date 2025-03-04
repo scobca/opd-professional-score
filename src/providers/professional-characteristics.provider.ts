@@ -113,6 +113,14 @@ export class ProfessionalCharacteristicsProvider {
     return new BasicSuccessfulResponse(res);
   }
 
+  public async createPullOfProfChar(data: CreateProfCharDto[]) {
+    for (const profChar of data) {
+      await this.createProfChar(profChar);
+    }
+
+    return 'Professional characteristics created successfully.';
+  }
+
   public async updateProfChar(data: UpdateProfCharDto) {
     await this.getProfCharById(data.id);
     const updatedData = data.updatedData;

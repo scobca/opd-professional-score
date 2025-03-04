@@ -72,6 +72,11 @@ export class ProfessionalCharacteristicsController {
     return await this.profCharProvider.createProfChar(data);
   }
 
+  @Post('/createPullOfProfChar')
+  public async createPullOfProfChar(@Body() data: CreateProfCharDto[]) {
+    return await this.profCharProvider.createPullOfProfChar(data);
+  }
+
   @Patch('/updateProfChar')
   public async updateProfChar(@Body() data: UpdateProfCharDto) {
     return await this.profCharProvider.updateProfChar(data);
