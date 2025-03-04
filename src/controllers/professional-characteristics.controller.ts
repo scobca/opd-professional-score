@@ -22,6 +22,11 @@ export class ProfessionalCharacteristicsController {
     private profCharProvider: ProfessionalCharacteristicsProvider,
   ) {}
 
+  @Get('/getByName')
+  public async getByName(@Body() data: { name: string }) {
+    return await this.profCharProvider.getPCByName(data.name);
+  }
+
   @Get('/getAll')
   public async getAll() {
     return await this.profCharProvider.getAll();

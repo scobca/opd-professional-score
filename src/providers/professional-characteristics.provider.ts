@@ -19,6 +19,18 @@ export class ProfessionalCharacteristicsProvider {
     return profChar == null;
   }
 
+  public async getPCByName(name: string) {
+    const pc = await ProfessionalCharacteristics.findOne({
+      where: {
+        name: name,
+      },
+    });
+    if (pc == null)
+      throw new ProfessionalCharacteristicNotFoundException(name, 'name');
+
+    return pc;
+  }
+
   public async getAll() {
     return await ProfessionalCharacteristics.findAll();
   }
