@@ -10,6 +10,8 @@ class Profession
     public int $id;
     public string $name;
     public string $description;
+    public string $requirements;
+    public string $sphere;
     public PDO $db;
 
     public function __construct(PDO $conn)
@@ -23,17 +25,14 @@ class Profession
         return $stmt->fetchAll();
     }
 
-    public function getById(int $id): bool
+    public function getById(int $id): ?array
     {
         $stmt = $this->db->prepare("SELECT * FROM professions WHERE id = ?");
         try {
             $stmt->execute([$id]);
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->name = $data["name"];
-            $this->description = $data["description"];
-            return true;
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            return false;
+            return null;
         }
     }
 
@@ -49,14 +48,40 @@ class Profession
         }
     }
 
-    public function updateById(int $id, string $name, string $description): bool
+    public function updateById(int $id, string $name, string $description, string $requirements, string $sphere): bool
     {
         $stmt = $this->db->prepare(
-            "UPDATE professions SET name = ?, description = ? WHERE id = ?");
+            "UPDATE professions SET name = ?, description = ?, requirements = ?, sphere = ? WHERE id = ?");
         try {
-            $stmt->execute([$name, $description, $id]);
+            $stmt->execute([$name, $description, $requirements, $sphere, $id]);
             return true;
         } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function rate(int $id, int $pvk_id, int $user_id, int $rating): bool
+    {
+        $stmt = $this->db->prepare("
+                INSERT INTO professions_ratings (profession_id, pc_id, user_id, rating) VALUES (?, ?, ?, ?)
+        ");
+        try {
+
+            $stmt->execute([$id, $pvk_id, $user_id, $rating]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function deleteAllByUserId(int $userId): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM professions_ratings WHERE user_id = ?");
+        try {
+            $stmt->execute([$userId]);
+            return true;
+        } catch (PDOException $e) {
+            var_dump($e->getMessage());
             return false;
         }
     }

@@ -7,6 +7,7 @@ use PDOException;
 
 class Pvk
 {
+    public int $id;
     public string $name;
     public string $description;
 
@@ -32,6 +33,54 @@ class Pvk
             return true;
         } catch (PDOException $e) {
             return false;
+        }
+    }
+
+    public function getByName(string $name): bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM professional_characteristics WHERE name = ?");
+        try {
+            $stmt->execute([$name]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->id = $data['id'];
+            $this->name = $data['name'];
+            $this->description = $data['description'];
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getById(int $id): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM professional_characteristics WHERE id = ?");
+        try {
+            $stmt->execute([$id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function getByProfessionId(string $id): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM professions_ratings WHERE profession_id = ?");
+        try {
+            $stmt->execute([$id]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function getByProfessionIdByUserId(string $professionId, string $userId): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM professions_ratings WHERE profession_id = ? AND user_id = ?");
+        try {
+            $stmt->execute([$professionId, $userId]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return null;
         }
     }
 }
