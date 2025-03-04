@@ -16,7 +16,7 @@ class UserController
         include_once $_SERVER['DOCUMENT_ROOT'] . "/utils/JWTHandler.php";
 
         $credentials = JWTHandler::getJWTData($jwt);
-        if ($credentials["role"] == "admin") {
+        if ($credentials["role"] != "user") {
             $db = new Database();
             $conn = $db->getConnection();
             $user = new User($conn);
