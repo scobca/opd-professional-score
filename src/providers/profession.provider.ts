@@ -34,6 +34,17 @@ export class ProfessionProvider {
     return new BasicSuccessfulResponse(res);
   }
 
+  public async createPullOfProfessions(data: CreateProfessionDto[]) {
+    for (const profession of data) {
+      await Profession.create({ ...profession });
+    }
+
+    const res = {
+      message: 'Profession created successfully.',
+    };
+    return new BasicSuccessfulResponse(res);
+  }
+
   public async updateProfession(
     data: UpdateProfessionDto,
   ): Promise<BasicSuccessfulResponse<Profession>> {

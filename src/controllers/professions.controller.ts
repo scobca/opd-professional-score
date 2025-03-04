@@ -38,6 +38,11 @@ export class ProfessionController {
     return await this.professionProvider.createProfession(data);
   }
 
+  @Post('/createPullOfProfessions')
+  public async createPullOfProfessions(@Body() data: CreateProfessionDto[]) {
+    return await this.professionProvider.createPullOfProfessions(data);
+  }
+
   @Patch('/updateProfession')
   public async updateProfession(@Body() data: UpdateProfessionDto) {
     return await this.professionProvider.updateProfession(data);
