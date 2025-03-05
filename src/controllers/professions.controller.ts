@@ -16,7 +16,6 @@ import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
 
 @Controller('/professions')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class ProfessionController {
   constructor(
     @Inject(ProfessionProvider) private professionProvider: ProfessionProvider,
@@ -28,7 +27,7 @@ export class ProfessionController {
     return await this.professionProvider.getAll();
   }
 
-  @Get('/getProfessionById')
+  @Post('/getProfessionById')
   public async getProfessionById(@Body() data: { id: number }) {
     return await this.professionProvider.getProfessionById(data.id);
   }
