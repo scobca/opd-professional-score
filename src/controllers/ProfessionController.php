@@ -152,7 +152,7 @@ class ProfessionController
                 $db = new Database();
                 $conn = $db->getConnection();
                 $prof = new Profession($conn);
-                $prof ->deleteAllByUserId($credentials['id']);
+                $prof ->deleteAllByUserIdByProfessionI($credentials['id'], $profession_id);
                 for ($i = 0; $i < count($pvk_names); $i++) {
                     $profession = new Profession($conn);
                     $pvk = new Pvk($conn);

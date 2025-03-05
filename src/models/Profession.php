@@ -74,11 +74,11 @@ class Profession
         }
     }
 
-    public function deleteAllByUserId(int $userId): bool
+    public function deleteAllByUserIdByProfessionI(int $userId, int $professionId): bool
     {
-        $stmt = $this->db->prepare("DELETE FROM professions_ratings WHERE user_id = ?");
+        $stmt = $this->db->prepare("DELETE FROM professions_ratings WHERE user_id = ? AND profession_id = ?");
         try {
-            $stmt->execute([$userId]);
+            $stmt->execute([$userId, $professionId]);
             return true;
         } catch (PDOException $e) {
             var_dump($e->getMessage());
