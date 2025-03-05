@@ -15,7 +15,6 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/profChar')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class ProfessionalCharacteristicsController {
   constructor(
     @Inject(ProfessionalCharacteristicsProvider)
