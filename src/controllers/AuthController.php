@@ -137,10 +137,10 @@ class AuthController
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = 'Verify email on OPD-professional-score';
-            $mail->Body =
-                'Hello, ' . $user->username . '! You decided to verify your email address, so this is your verification code: <b>' . $code . '</b>
-                    <br>By the way, don\'t forget to visit our Los Pollos Hermanos restaurant!';
-                    $mail->AltBody = 'This is your verification code <b>' . $code . '</b>';
+            $email_template = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/views/email.php");;
+            $email_template = str_replace("[Имя пользователя]", $user->username, $email_template);
+            $email_template = str_replace("[Код верификации]", $code, $email_template);
+            $mail->Body = $email_template;
             $mail->SMTPDebug = 0;
             $mail->send();
 

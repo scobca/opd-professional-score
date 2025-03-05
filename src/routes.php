@@ -74,6 +74,11 @@ post('/email-verify', function() {
 post('/resend-code', function () {
     if (!empty($_POST['email'])) {
         \controllers\AuthController::sendCode($_POST['email']);
+    } else {
+        echo json_encode([
+            "status" => 400,
+            "message" => "Fill empty fields"
+        ]);
     }
 });
 
