@@ -102,11 +102,14 @@ post('/update-profession', function () {
     $bearer = getallheaders()["Authorization"];
     $jwt = preg_split("/\s+/", $bearer)[1];
     if (!empty($_POST['profession_id']) && !empty($_POST['profession_name']) &&
-        !empty($_POST['profession_description']) && !empty($jwt)) {
+        !empty($_POST['profession_description']) && !empty($_POST['profession_requirements'])
+        && !empty($_POST['profession_sphere']) &&!empty($jwt)) {
         $id = htmlspecialchars(trim($_POST['profession_id']));
         $name = htmlspecialchars(trim($_POST['profession_name']));
         $description = htmlspecialchars(trim($_POST['profession_description']));
-        \controllers\ProfessionController::updateProfessionById($id, $name, $description, $jwt);
+        $requirements = htmlspecialchars(trim($_POST['profession_requirements']));
+        $sphere = htmlspecialchars(trim($_POST['profession_sphere']));
+        \controllers\ProfessionController::updateProfessionById($id, $name, $description, $requirements, $sphere, $jwt);
     } else {
         http_response_code(400);
         echo json_encode(array(
@@ -126,6 +129,20 @@ post('/create-profession', function () {
         $requirements = htmlspecialchars(trim($_POST['requirements']));
         $sphere = htmlspecialchars(trim($_POST['sphere']));
         \controllers\ProfessionController::createProfession($name, $description, $requirements, $sphere, $jwt);
+    } else {
+        http_response_code(400);
+        echo json_encode(array(
+            "status" => 400,
+            "message" => "Fill empty fields",
+        ));
+    }
+});
+
+post('/rate-profession', function () {
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (count($_POST) == 13 && !empty($jwt)) {
+        \controllers\ProfessionController::rateProfession($_POST, $jwt);
     } else {
         http_response_code(400);
         echo json_encode(array(
@@ -167,9 +184,26 @@ get('/get-professions-all', function () {
     \controllers\ProfessionController::getAllProfessions();
 });
 
-
 get('/profession/$id', function ($id) {
     \controllers\ProfessionController::getProfessionById($id);
+});
+
+get('/pvk/profession/$id', function ($id) {
+    \controllers\PvkController::getPvkByProfessionId($id);
+});
+
+get('/pvk/profession/$professionId/user/$userId', function ($professionId, $userId) {
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($jwt)) {
+        \controllers\PvkController::getPvkByProfessionIdByUserId($professionId, $userId, $jwt);
+    } else {
+        http_response_code(401);
+        echo json_encode(array(
+            "status" => 401,
+            "message" => "You are not authorized to access this data",
+        ));
+    }
 });
 
 

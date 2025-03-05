@@ -57,6 +57,17 @@ class User
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getById(int $id): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        try {
+            $stmt->execute([$id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
     public function generateConfirmCode(string $email): ?int
     {
         $stmt = $this->db->prepare("DELETE FROM verification_codes WHERE 
@@ -95,13 +106,6 @@ class User
             return $stmt->fetchColumn();
         }
         return null;
-    }
-
-    public function getById(int $id): bool
-    {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->execute([$id]);
-        return $this->fillData($stmt);
     }
 
     private function fillData($stmt): bool
