@@ -6,11 +6,8 @@ import {
   Inject,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ProfessionProvider } from '../providers/profession.provider';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';

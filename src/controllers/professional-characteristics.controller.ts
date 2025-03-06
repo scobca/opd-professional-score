@@ -4,15 +4,13 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ProfessionalCharacteristicsProvider } from '../providers/professional-characteristics.provider';
 import { CreateProfCharDto } from '../dto/professions/professional-characteristics/create-prof-char.dto';
 import { UpdateProfCharDto } from '../dto/professions/professional-characteristics/update-prof-char.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/profChar')
 export class ProfessionalCharacteristicsController {
@@ -21,9 +19,9 @@ export class ProfessionalCharacteristicsController {
     private profCharProvider: ProfessionalCharacteristicsProvider,
   ) {}
 
-  @Get('/getByName')
-  public async getByName(@Body() data: { name: string }) {
-    return await this.profCharProvider.getPCByName(data.name);
+  @Get('/getByName/:name')
+  public async getByName(@Param('name') name: string) {
+    return await this.profCharProvider.getPCByName(name);
   }
 
   @Get('/getAll')
@@ -61,9 +59,9 @@ export class ProfessionalCharacteristicsController {
     return await this.profCharProvider.getAllOperational();
   }
 
-  @Get('/getProfCharById')
-  public async getById(@Body() data: { id: number }) {
-    return await this.profCharProvider.getProfCharById(data.id);
+  @Get('/getProfCharById/:id')
+  public async getById(@Param('id') id: number) {
+    return await this.profCharProvider.getProfCharById(id);
   }
 
   @Post('/createProfChar')

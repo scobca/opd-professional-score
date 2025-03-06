@@ -30,6 +30,18 @@ export class ProfessionsStatisticProvider {
     return res.sort((a, b) => a.pcId - b.pcId);
   }
 
+  public async getStatsByUserAndProfession(
+    userId: number,
+    professionId: number,
+  ) {
+    return await ProfessionScores.findAll({
+      where: {
+        userId: userId,
+        professionId: professionId,
+      },
+    });
+  }
+
   public async createStats(data: CreateProfessionStats[]) {
     await Promise.all(
       data.map(async (el) => {
