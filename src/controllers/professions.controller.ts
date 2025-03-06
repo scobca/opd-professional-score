@@ -6,17 +6,13 @@ import {
   Inject,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ProfessionProvider } from '../providers/profession.provider';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
 
 @Controller('/professions')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class ProfessionController {
   constructor(
     @Inject(ProfessionProvider) private professionProvider: ProfessionProvider,
@@ -28,7 +24,7 @@ export class ProfessionController {
     return await this.professionProvider.getAll();
   }
 
-  @Get('/getProfessionById')
+  @Post('/getProfessionById')
   public async getProfessionById(@Body() data: { id: number }) {
     return await this.professionProvider.getProfessionById(data.id);
   }

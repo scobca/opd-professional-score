@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ProfessionsStatisticProvider } from '../providers/professions-statistic.provider';
 import { CreateProfessionStats } from '../dto/service/create-profession-stats.dto';
 import { UpdateProfessionStats } from '../dto/service/update-profession-stats.dto';
@@ -10,10 +18,21 @@ export class ProfessionStatisticController {
     private professionStatisticProvider: ProfessionsStatisticProvider,
   ) {}
 
-  @Get('/getProfessionStatistic')
+  @Post('/getProfessionStatistic')
   public async getStatistic(@Body() data: { id: number }) {
     return await this.professionStatisticProvider.getStaticForProfession(
       data.id,
+    );
+  }
+
+  @Get('/getStatsByUserAndProfession/:userId/:professionId')
+  public async getStatsByUserAndProfession(
+    @Param('userId') userId: number,
+    @Param('professionId') professionId: number,
+  ) {
+    return await this.professionStatisticProvider.getStatsByUserAndProfession(
+      userId,
+      professionId,
     );
   }
 
