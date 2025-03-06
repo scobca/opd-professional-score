@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Req,
@@ -25,9 +26,9 @@ export class TestBlocksController {
     return await this.testBlockProvider.getAll();
   }
 
-  @Get('/getTestBlockById')
-  public async getTestBlockById(@Body() data: { id: number }) {
-    return await this.testBlockProvider.getTestBlockById(data.id);
+  @Get('/getTestBlockById/:id')
+  public async getTestBlockById(@Param('id') id: number) {
+    return await this.testBlockProvider.getTestBlockById(id);
   }
 
   @Post('/createTestBlock')

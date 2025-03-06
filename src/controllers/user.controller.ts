@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -39,27 +40,27 @@ export class UserController {
     }));
   }
 
-  @Get('/getUserById')
+  @Get('/getUserById/:id')
   public async getUserById(
-    @Body() data: { id: number },
+    @Param('id') id: number,
   ): Promise<BasicSuccessfulResponse<User> | null> {
-    const user = await this.userProvider.getUserById(data.id);
+    const user = await this.userProvider.getUserById(id);
     return new BasicSuccessfulResponse(user);
   }
 
-  @Get('/getUserByEmail')
+  @Get('/getUserByEmail/:email')
   public async getUserByEmail(
-    @Body() data: { email: string },
+    @Param('email') email: string,
   ): Promise<BasicSuccessfulResponse<User> | null> {
-    const user = await this.userProvider.getUserByEmail(data.email);
+    const user = await this.userProvider.getUserByEmail(email);
     return new BasicSuccessfulResponse(user);
   }
 
-  @Get('/getUsersByRole')
+  @Get('/getUsersByRole/:role')
   public async getUsersByRole(
-    @Body() data: { role: Roles },
+    @Param('role') role: Roles,
   ): Promise<BasicSuccessfulResponse<User[]> | null> {
-    return await this.userProvider.getUsersByRole(data.role);
+    return await this.userProvider.getUsersByRole(role);
   }
 
   @Post('/create')

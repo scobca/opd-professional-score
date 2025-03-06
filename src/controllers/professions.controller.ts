@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -24,9 +25,9 @@ export class ProfessionController {
     return await this.professionProvider.getAll();
   }
 
-  @Post('/getProfessionById')
-  public async getProfessionById(@Body() data: { id: number }) {
-    return await this.professionProvider.getProfessionById(data.id);
+  @Get('/getProfessionById/:id')
+  public async getProfessionById(@Param('id') id: number) {
+    return await this.professionProvider.getProfessionById(id);
   }
 
   @Post('/createProfession')

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -22,14 +23,14 @@ export class TestTypesController {
     return await this.testTypesProvider.getAllTestTypes();
   }
 
-  @Get('/getById')
-  async getTestTypeById(@Body() data: { id: number }) {
-    return await this.testTypesProvider.getTypeById(data.id);
+  @Get('/getById/:id')
+  async getTestTypeById(@Param('id') id: number) {
+    return await this.testTypesProvider.getTypeById(id);
   }
 
-  @Get('/getByName')
-  async getTestTypeByName(@Body() data: { name: string }) {
-    return await this.testTypesProvider.getTypeByName(data.name);
+  @Get('/getByName/:name')
+  async getTestTypeByName(@Param('name') name: string) {
+    return await this.testTypesProvider.getTypeByName(name);
   }
 
   @Post('create')

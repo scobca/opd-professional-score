@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Req,
@@ -58,10 +59,10 @@ export class TestController {
     return res;
   }
 
-  @Get('/getAllTestsByUserId')
-  public async getAllTestsByUserId(@Body() data: { id: number }) {
+  @Get('/getAllTestsByUserId/:id')
+  public async getAllTestsByUserId(@Param('id') id: number) {
     const tests = await TestToUserDashboard.findAll({
-      where: { userId: data.id },
+      where: { userId: id },
     });
     const res: CustomTestOutputAdmin[] = [];
 
@@ -80,14 +81,14 @@ export class TestController {
     return res;
   }
 
-  @Get('/getTestById')
-  public async getTestById(@Body() data: { id: number }) {
-    return await this.testProvider.getTestById(data.id);
+  @Get('/getTestById/:id')
+  public async getTestById(@Param('id') id: number) {
+    return await this.testProvider.getTestById(id);
   }
 
-  @Get('/getTestsByAuthorId')
-  public async getTestsByAuthorId(@Body() data: { id: number }) {
-    return await this.testProvider.getTestByAuthorId(data.id);
+  @Get('/getTestsByAuthorId/:id')
+  public async getTestsByAuthorId(@Param('id') id: number) {
+    return await this.testProvider.getTestByAuthorId(id);
   }
 
   @Post('/createTest')

@@ -18,11 +18,9 @@ export class ProfessionStatisticController {
     private professionStatisticProvider: ProfessionsStatisticProvider,
   ) {}
 
-  @Post('/getProfessionStatistic')
-  public async getStatistic(@Body() data: { id: number }) {
-    return await this.professionStatisticProvider.getStaticForProfession(
-      data.id,
-    );
+  @Get('/getProfessionStatistic/:id')
+  public async getStatistic(@Param('id') id: number) {
+    return await this.professionStatisticProvider.getStaticForProfession(id);
   }
 
   @Get('/getStatsByUserAndProfession/:userId/:professionId')

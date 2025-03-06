@@ -7,7 +7,7 @@ export class TestTypeNotFoundException<
   constructor(param: T, paramName: string) {
     super(
       HttpStatus.NOT_FOUND,
-      `Test with ${paramName}: '${param.toString()}' not found.`,
+      `Test type with ${paramName}: '${param.toString()}' not found.`,
     );
   }
 }

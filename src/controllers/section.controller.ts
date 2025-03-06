@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -22,14 +23,14 @@ export class SectionController {
     return await this.sectionProvider.getAllSections();
   }
 
-  @Get('/getSectionById')
-  public async getSectionById(@Body() data: { id: number }) {
-    return await this.sectionProvider.getSectionById(data.id);
+  @Get('/getSectionById/:id')
+  public async getSectionById(@Param('id') id: number) {
+    return await this.sectionProvider.getSectionById(id);
   }
 
-  @Get('/getSectionsByTestId')
-  public async getSectionsByTestId(@Body() data: { testId: number }) {
-    return await this.sectionProvider.getSectionsByTestId(data.testId);
+  @Get('/getSectionsByTestId/:testId')
+  public async getSectionsByTestId(@Param('testId') testId: number) {
+    return await this.sectionProvider.getSectionsByTestId(testId);
   }
 
   @Post('/createSection')
