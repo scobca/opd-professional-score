@@ -7,19 +7,15 @@ import {
   Patch,
   Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { TestProvider } from '../providers/test.provider';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { CreateTestDto } from '../dto/test/create-test.dto';
 import { UpdateTestDto } from '../dto/test/update-test.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { TestToUserDashboard } from '../entities/test-to-user-dashboard.entity';
 import { CustomTestOutputAdmin } from '../IO/custom/custom-test-output-admin';
 
 @Controller('/test')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class TestController {
   constructor(
     @Inject(TestProvider) private testProvider: TestProvider,
