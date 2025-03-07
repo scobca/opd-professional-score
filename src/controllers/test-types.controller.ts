@@ -4,18 +4,15 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { TestTypesProvider } from '../providers/test-types.provider';
 import { CreateTestTypeDto } from '../dto/test/test-types/create-test-type.dto';
 import { UpdateTypeDto } from '../dto/test/test-types/update-type.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/testTypes')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class TestTypesController {
   constructor(
     @Inject(TestTypesProvider) private testTypesProvider: TestTypesProvider,
@@ -26,14 +23,14 @@ export class TestTypesController {
     return await this.testTypesProvider.getAllTestTypes();
   }
 
-  @Get('/getById')
-  async getTestTypeById(@Body() data: { id: number }) {
-    return await this.testTypesProvider.getTypeById(data.id);
+  @Get('/getById/:id')
+  async getTestTypeById(@Param('id') id: number) {
+    return await this.testTypesProvider.getTypeById(id);
   }
 
-  @Get('/getByName')
-  async getTestTypeByName(@Body() data: { name: string }) {
-    return await this.testTypesProvider.getTypeByName(data.name);
+  @Get('/getByName/:name')
+  async getTestTypeByName(@Param('name') name: string) {
+    return await this.testTypesProvider.getTypeByName(name);
   }
 
   @Post('create')

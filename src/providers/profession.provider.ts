@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Profession } from '../entities/professions.entity';
 import { ProfessionNotFoundException } from '../exceptions/professions/profession-not-found.exception';
 import { CreateProfessionDto } from '../dto/professions/create-profession.dto';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { UpdateProfessionDto } from '../dto/professions/update-profession.dto';
+import { ArchiveProfessionsStrategy } from '../strategies/archive-professions.strategy';
 
 @Injectable()
 export class ProfessionProvider {
-  constructor() {}
+  constructor(
+    @Inject(ArchiveProfessionsStrategy)
+    private archiveProfessionsStrategy: ArchiveProfessionsStrategy,
+  ) {}
 
   public async getAll(): Promise<Profession[]> {
     return await Profession.findAll();
@@ -25,7 +29,7 @@ export class ProfessionProvider {
   public async createProfession(
     data: CreateProfessionDto,
   ): Promise<BasicSuccessfulResponse<Profession>> {
-    const profession = await Profession.create({ ...data });
+    const profession = await Profession.create({ ...data, archived: true });
 
     const res = {
       message: 'Profession created successfully.',
@@ -36,7 +40,7 @@ export class ProfessionProvider {
 
   public async createPullOfProfessions(data: CreateProfessionDto[]) {
     for (const profession of data) {
-      await Profession.create({ ...profession });
+      await Profession.create({ ...profession, archived: true });
     }
 
     const res = {
@@ -52,6 +56,7 @@ export class ProfessionProvider {
     const updatedData = data.updatedData;
 
     await Profession.update({ ...updatedData }, { where: { id: data.id } });
+    await this.archiveProfessionsStrategy.setArchiveStatus(data.id);
 
     const res = {
       message: 'Profession updated successfully.',

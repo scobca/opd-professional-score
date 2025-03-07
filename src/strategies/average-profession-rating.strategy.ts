@@ -24,6 +24,8 @@ export class AverageProfessionRatingStrategy {
     await Promise.all(
       profChar.map(async (pc) => {
         let score = 0;
+        let minScore = 21;
+        let maxScore = -21;
 
         const professionToPC = await ProfessionScores.findAll({
           where: {
@@ -35,19 +37,31 @@ export class AverageProfessionRatingStrategy {
         await Promise.all(
           professionToPC.map((el) => {
             score += el.score;
+            minScore = Math.min(minScore, el.score);
+            maxScore = Math.max(maxScore, el.score);
           }),
         );
-        const averageScore = score / professionToPC.length;
+        const dispersion = maxScore - minScore;
+        const average = score / professionToPC.length;
 
-        res.push({
-          professionId: profession.id,
-          professionName: profession.name,
-          professionDescription: profession.description,
-          pcId: pc.id,
-          pcName: pc.name,
-          pcDescription: pc.description,
-          averageScore: isNaN(averageScore) ? 0 : averageScore,
-        });
+        if (!isNaN(average)) {
+          let resultScore: number;
+          if (dispersion != 0) {
+            resultScore = average + (1 / dispersion) * average;
+          } else {
+            resultScore = average + average;
+          }
+
+          res.push({
+            professionId: profession.id,
+            professionName: profession.name,
+            professionDescription: profession.description,
+            pcId: pc.id,
+            pcName: pc.name,
+            pcDescription: pc.description,
+            averageScore: parseFloat(resultScore.toFixed(2)),
+          });
+        }
       }),
     );
 

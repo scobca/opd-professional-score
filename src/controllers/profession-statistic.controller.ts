@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -18,11 +19,9 @@ export class ProfessionStatisticController {
     private professionStatisticProvider: ProfessionsStatisticProvider,
   ) {}
 
-  @Post('/getProfessionStatistic')
-  public async getStatistic(@Body() data: { id: number }) {
-    return await this.professionStatisticProvider.getStaticForProfession(
-      data.id,
-    );
+  @Get('/getProfessionStatistic/:id')
+  public async getStatistic(@Param('id') id: number) {
+    return await this.professionStatisticProvider.getStaticForProfession(id);
   }
 
   @Get('/getStatsByUserAndProfession/:userId/:professionId')
@@ -44,5 +43,16 @@ export class ProfessionStatisticController {
   @Patch('/updateStats')
   public async updateStats(@Body() data: UpdateProfessionStats[]) {
     return await this.professionStatisticProvider.updateStats(data);
+  }
+
+  @Delete('/deleteStats/:userId/:professionId')
+  public async deleteStats(
+    @Param('userId') userId: number,
+    @Param('professionId') professionId: number,
+  ) {
+    return await this.professionStatisticProvider.deleteStats({
+      userId: userId,
+      professionId: professionId,
+    });
   }
 }

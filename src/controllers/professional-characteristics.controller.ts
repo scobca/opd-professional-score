@@ -19,14 +19,14 @@ export class ProfessionalCharacteristicsController {
     private profCharProvider: ProfessionalCharacteristicsProvider,
   ) {}
 
-  @Get('/getByName/:name')
-  public async getByName(@Param('name') name: string) {
-    return await this.profCharProvider.getPCByName(name);
-  }
-
   @Get('/getAll')
   public async getAll() {
     return await this.profCharProvider.getAll();
+  }
+
+  @Get('/getByName/:name')
+  public async getByName(@Param('name') name: string) {
+    return await this.profCharProvider.getPCByName(name);
   }
 
   @Get('getAllPersonal')

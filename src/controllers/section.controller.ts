@@ -4,18 +4,15 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { SectionProvider } from '../providers/section.provider';
 import { CreateSectionDto } from '../dto/test/section/create-section.dto';
 import { UpdateSectionDto } from '../dto/test/section/update-section.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/section')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class SectionController {
   constructor(
     @Inject(SectionProvider) private sectionProvider: SectionProvider,
@@ -26,14 +23,14 @@ export class SectionController {
     return await this.sectionProvider.getAllSections();
   }
 
-  @Get('/getSectionById')
-  public async getSectionById(@Body() data: { id: number }) {
-    return await this.sectionProvider.getSectionById(data.id);
+  @Get('/getSectionById/:id')
+  public async getSectionById(@Param('id') id: number) {
+    return await this.sectionProvider.getSectionById(id);
   }
 
-  @Get('/getSectionsByTestId')
-  public async getSectionsByTestId(@Body() data: { testId: number }) {
-    return await this.sectionProvider.getSectionsByTestId(data.testId);
+  @Get('/getSectionsByTestId/:testId')
+  public async getSectionsByTestId(@Param('testId') testId: number) {
+    return await this.sectionProvider.getSectionsByTestId(testId);
   }
 
   @Post('/createSection')

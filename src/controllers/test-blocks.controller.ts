@@ -4,20 +4,17 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { TestBlockProvider } from '../providers/test-block.provider';
 import { CreateTestBlockDto } from '../dto/test/test-blocks/create-test-block.dto';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UpdateTestBlockDto } from '../dto/test/test-blocks/update-test-block.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/testBlock')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class TestBlocksController {
   constructor(
     @Inject(TestBlockProvider) private testBlockProvider: TestBlockProvider,
@@ -29,9 +26,9 @@ export class TestBlocksController {
     return await this.testBlockProvider.getAll();
   }
 
-  @Get('/getTestBlockById')
-  public async getTestBlockById(@Body() data: { id: number }) {
-    return await this.testBlockProvider.getTestBlockById(data.id);
+  @Get('/getTestBlockById/:id')
+  public async getTestBlockById(@Param('id') id: number) {
+    return await this.testBlockProvider.getTestBlockById(id);
   }
 
   @Post('/createTestBlock')

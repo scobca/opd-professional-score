@@ -4,22 +4,19 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { TestProvider } from '../providers/test.provider';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { CreateTestDto } from '../dto/test/create-test.dto';
 import { UpdateTestDto } from '../dto/test/update-test.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
 import { TestToUserDashboard } from '../entities/test-to-user-dashboard.entity';
 import { CustomTestOutputAdmin } from '../IO/custom/custom-test-output-admin';
 
 @Controller('/test')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class TestController {
   constructor(
     @Inject(TestProvider) private testProvider: TestProvider,
@@ -62,10 +59,10 @@ export class TestController {
     return res;
   }
 
-  @Get('/getAllTestsByUserId')
-  public async getAllTestsByUserId(@Body() data: { id: number }) {
+  @Get('/getAllTestsByUserId/:id')
+  public async getAllTestsByUserId(@Param('id') id: number) {
     const tests = await TestToUserDashboard.findAll({
-      where: { userId: data.id },
+      where: { userId: id },
     });
     const res: CustomTestOutputAdmin[] = [];
 
@@ -84,14 +81,14 @@ export class TestController {
     return res;
   }
 
-  @Get('/getTestById')
-  public async getTestById(@Body() data: { id: number }) {
-    return await this.testProvider.getTestById(data.id);
+  @Get('/getTestById/:id')
+  public async getTestById(@Param('id') id: number) {
+    return await this.testProvider.getTestById(id);
   }
 
-  @Get('/getTestsByAuthorId')
-  public async getTestsByAuthorId(@Body() data: { id: number }) {
-    return await this.testProvider.getTestByAuthorId(data.id);
+  @Get('/getTestsByAuthorId/:id')
+  public async getTestsByAuthorId(@Param('id') id: number) {
+    return await this.testProvider.getTestByAuthorId(id);
   }
 
   @Post('/createTest')
