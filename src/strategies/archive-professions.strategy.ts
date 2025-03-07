@@ -15,7 +15,13 @@ export class ArchiveProfessionsStrategy {
     const professionScores = await ProfessionScores.findAll({
       where: { professionId: professionId },
     });
-    if (professionScores.length > 0) {
+
+    const userIds = new Set();
+    professionScores.forEach((professionScore) => {
+      userIds.add(professionScore.userId);
+    });
+
+    if (userIds.size >= 3) {
       await Profession.update(
         { archived: false },
         { where: { id: professionId } },
