@@ -30,6 +30,9 @@ export class Profession extends Model {
   @Column({ allowNull: false })
   description: string;
 
+  @Column({ allowNull: false })
+  archived: boolean;
+
   @HasMany(() => ProfessionScores, { onDelete: 'CASCADE' })
   professionScores: ProfessionScores[];
 

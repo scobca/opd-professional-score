@@ -10,6 +10,7 @@ import { ProfessionController } from '../controllers/professions.controller';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
 import { UserModule } from './user.module';
 import { ProfessionScores } from '../entities/profession-scores.entity';
+import { ArchiveProfessionsStrategy } from '../strategies/archive-professions.strategy';
 
 @Module({
   imports: [
@@ -25,12 +26,14 @@ import { ProfessionScores } from '../entities/profession-scores.entity';
     ProfessionalCharacteristicsProvider,
     ProfessionProvider,
     JwtDecoderUtil,
+    ArchiveProfessionsStrategy,
   ],
   controllers: [ProfessionalCharacteristicsController, ProfessionController],
   exports: [
     ProfessionalCharacteristicsProvider,
     ProfessionProvider,
     JwtDecoderUtil,
+    ArchiveProfessionsStrategy,
   ],
 })
 export class ProfessionModule {}

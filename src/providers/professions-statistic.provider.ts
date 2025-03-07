@@ -10,16 +10,19 @@ import { ProfessionScoreNotFound } from '../exceptions/service/profession-score-
 import { ProfessionProvider } from './profession.provider';
 import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
 import { UserProvider } from './user.provider';
+import { ArchiveProfessionsStrategy } from '../strategies/archive-professions.strategy';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
   constructor(
+    @Inject(ProfessionProvider) private professionProvider: ProfessionProvider,
+    @Inject(UserProvider) private userProvider: UserProvider,
     @Inject(AverageProfessionRatingStrategy)
     private averageProfessionRatingStrategy: AverageProfessionRatingStrategy,
-    @Inject(ProfessionProvider) private professionProvider: ProfessionProvider,
     @Inject(ProfessionalCharacteristicsProvider)
     private professionalCharacteristicsProvider: ProfessionalCharacteristicsProvider,
-    @Inject(UserProvider) private userProvider: UserProvider,
+    @Inject(ArchiveProfessionsStrategy)
+    private archiveProfessionsStrategy: ArchiveProfessionsStrategy,
   ) {}
 
   public async getStaticForProfession(
@@ -57,6 +60,10 @@ export class ProfessionsStatisticProvider {
       }),
     );
 
+    await this.archiveProfessionsStrategy.setArchiveStatus(
+      data[0].professionId,
+    );
+
     return new BasicSuccessfulResponse('Stats created successfully.');
   }
 
@@ -90,6 +97,11 @@ export class ProfessionsStatisticProvider {
         }
       }),
     );
+
+    await this.archiveProfessionsStrategy.setArchiveStatus(
+      data[0].professionId,
+    );
+
     return new BasicSuccessfulResponse('Stats updated successfully.');
   }
 
