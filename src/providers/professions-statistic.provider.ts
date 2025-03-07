@@ -11,6 +11,7 @@ import { ProfessionProvider } from './profession.provider';
 import { ProfessionalCharacteristicsProvider } from './professional-characteristics.provider';
 import { UserProvider } from './user.provider';
 import { ArchiveProfessionsStrategy } from '../strategies/archive-professions.strategy';
+import { DeleteProfessionStatsDto } from '../dto/service/delete-profession-stats.dto';
 
 @Injectable()
 export class ProfessionsStatisticProvider {
@@ -103,6 +104,18 @@ export class ProfessionsStatisticProvider {
     );
 
     return new BasicSuccessfulResponse('Stats updated successfully.');
+  }
+
+  public async deleteStats(data: DeleteProfessionStatsDto) {
+    await ProfessionScores.destroy({
+      where: {
+        userId: data.userId,
+        professionId: data.professionId,
+      },
+    });
+    await this.archiveProfessionsStrategy.setArchiveStatus(data.professionId);
+
+    return new BasicSuccessfulResponse('Stats deleted successfully.');
   }
 
   private async checkComponentsValid(

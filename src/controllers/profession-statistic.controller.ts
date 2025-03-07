@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -42,5 +43,16 @@ export class ProfessionStatisticController {
   @Patch('/updateStats')
   public async updateStats(@Body() data: UpdateProfessionStats[]) {
     return await this.professionStatisticProvider.updateStats(data);
+  }
+
+  @Delete('/deleteStats/:userId/:professionId')
+  public async deleteStats(
+    @Param('userId') userId: number,
+    @Param('professionId') professionId: number,
+  ) {
+    return await this.professionStatisticProvider.deleteStats({
+      userId: userId,
+      professionId: professionId,
+    });
   }
 }
