@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Test } from '../entities/test.entity';
-import { TestNotFoundException } from '../exceptions/test/test-not-found.exception';
-import { CreateTestDto } from '../dto/test/create-test.dto';
-import { SectionProvider } from './section.provider';
-import { CreateSectionDto } from '../dto/test/section/create-section.dto';
-import { Section } from '../entities/section.entity';
-import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
-import { UserProvider } from './user.provider';
-import { UpdateTestDto } from '../dto/test/update-test.dto';
-import { TypesMismatchException } from '../exceptions/common/types-mismatch.exception';
-import { TestCreatedResponse } from '../IO/custom/test-created-response';
+import { Test } from '../../entities/test.entity';
+import { TestNotFoundException } from '../../exceptions/test/test-not-found.exception';
+import { CreateTestDto } from '../../dto/test/archive/create-test.dto';
+import { SectionProvider } from '../section.provider';
+import { CreateSectionDto } from '../../dto/test/section/create-section.dto';
+import { Section } from '../../entities/section.entity';
+import { BasicSuccessfulResponse } from '../../IO/basic-successful-response';
+import { UserProvider } from '../user.provider';
+import { UpdateTestDto } from '../../dto/test/archive/update-test.dto';
+import { TypesMismatchException } from '../../exceptions/common/types-mismatch.exception';
+import { TestCreatedResponse } from '../../IO/custom/test-created-response';
 
 @Injectable()
-export class TestProvider {
+export class TestArchiveProvider {
   constructor(
     @Inject(SectionProvider) private sectionProvider: SectionProvider,
     @Inject(UserProvider) private userProvider: UserProvider,

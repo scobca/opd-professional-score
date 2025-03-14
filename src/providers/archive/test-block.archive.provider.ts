@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TestBlock } from '../entities/test-blocks.entity';
-import { TestBlockNotFoundException } from '../exceptions/test/test-blocks/test-block-not-found.exception';
-import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
-import { TestToTestBlock } from '../entities/test-to-test-block.entity';
-import { CreateTestBlockDto } from '../dto/test/test-blocks/create-test-block.dto';
-import { TestProvider } from './test.provider';
-import { Test } from '../entities/test.entity';
-import { SectionProvider } from './section.provider';
-import { CreateTestToTestBlockDto } from '../dto/test/test-blocks/create-test-to-test-block.dto';
-import { UpdateTestBlockDto } from '../dto/test/test-blocks/update-test-block.dto';
+import { TestBlock } from '../../entities/test-blocks.entity';
+import { TestBlockNotFoundException } from '../../exceptions/test/test-blocks/test-block-not-found.exception';
+import { BasicSuccessfulResponse } from '../../IO/basic-successful-response';
+import { TestToTestBlock } from '../../entities/test-to-test-block.entity';
+import { CreateTestBlockDto } from '../../dto/test/archive/test-blocks/create-test-block.dto';
+import { TestArchiveProvider } from './test.archive.provider';
+import { Test } from '../../entities/test.entity';
+import { SectionProvider } from '../section.provider';
+import { CreateTestToTestBlockDto } from '../../dto/test/archive/test-blocks/create-test-to-test-block.dto';
+import { UpdateTestBlockDto } from '../../dto/test/archive/test-blocks/update-test-block.dto';
 
 @Injectable()
-export class TestBlockProvider {
+export class TestBlockArchiveProvider {
   constructor(
-    @Inject(TestProvider) private testProvider: TestProvider,
+    @Inject(TestArchiveProvider) private testProvider: TestArchiveProvider,
     @Inject(SectionProvider) private sectionProvider: SectionProvider,
   ) {}
 

@@ -1,4 +1,4 @@
-import { UpdateSectionDto } from './section/update-section.dto';
+import { UpdateSectionDto } from '../section/update-section.dto';
 import { CreateSectionInTestDto } from './create-section-in-test.dto';
 
 export class UpdatedTestDataDto {

@@ -9,15 +9,16 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { TestBlockProvider } from '../providers/test-block.provider';
-import { CreateTestBlockDto } from '../dto/test/test-blocks/create-test-block.dto';
+import { TestBlockArchiveProvider } from '../providers/archive/test-block.archive.provider';
+import { CreateTestBlockDto } from '../dto/test/archive/test-blocks/create-test-block.dto';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
-import { UpdateTestBlockDto } from '../dto/test/test-blocks/update-test-block.dto';
+import { UpdateTestBlockDto } from '../dto/test/archive/test-blocks/update-test-block.dto';
 
 @Controller('/testBlock')
-export class TestBlocksController {
+export class TestBlocksArchiveController {
   constructor(
-    @Inject(TestBlockProvider) private testBlockProvider: TestBlockProvider,
+    @Inject(TestBlockArchiveProvider)
+    private testBlockProvider: TestBlockArchiveProvider,
     @Inject(JwtDecoderUtil) private jwtDecoderUtil: JwtDecoderUtil,
   ) {}
 
