@@ -9,17 +9,17 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { TestProvider } from '../providers/test.provider';
+import { TestArchiveProvider } from '../providers/archive/test.archive.provider';
 import { JwtDecoderUtil } from '../utils/jwt-decoder.util';
-import { CreateTestDto } from '../dto/test/create-test.dto';
-import { UpdateTestDto } from '../dto/test/update-test.dto';
+import { CreateTestDto } from '../dto/test/archive/create-test.dto';
+import { UpdateTestDto } from '../dto/test/archive/update-test.dto';
 import { TestToUserDashboard } from '../entities/test-to-user-dashboard.entity';
 import { CustomTestOutputAdmin } from '../IO/custom/custom-test-output-admin';
 
 @Controller('/test')
-export class TestController {
+export class TestArchiveController {
   constructor(
-    @Inject(TestProvider) private testProvider: TestProvider,
+    @Inject(TestArchiveProvider) private testProvider: TestArchiveProvider,
     @Inject(JwtDecoderUtil) private jwtDecoderUtil: JwtDecoderUtil,
   ) {}
 

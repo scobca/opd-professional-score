@@ -14,6 +14,7 @@ import { Test } from './test.entity';
 import { TestToUserDashboard } from './test-to-user-dashboard.entity';
 import { TestBlock } from './test-blocks.entity';
 import { ProfessionScores } from './profession-scores.entity';
+import { SimpleLightTestEntity } from './simple-light-test.entity';
 
 @Table({ tableName: 'user' })
 export class User extends Model {
@@ -43,6 +44,9 @@ export class User extends Model {
 
   @HasMany(() => Test, { onDelete: 'CASCADE' })
   test: Test[];
+
+  @HasMany(() => SimpleLightTestEntity, { onDelete: 'CASCADE' })
+  simpleLightTest: SimpleLightTestEntity;
 
   @HasMany(() => TestBlock, { onDelete: 'CASCADE' })
   testBlocks: TestBlock[];
