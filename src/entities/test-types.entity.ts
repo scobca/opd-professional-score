@@ -7,6 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Test } from './test.entity';
+import { SimpleLightTestEntity } from './simple-light-test.entity';
 
 @Table({ tableName: 'test_types' })
 export class TestTypes extends Model {
@@ -23,4 +24,7 @@ export class TestTypes extends Model {
 
   @HasMany(() => Test, { onDelete: 'CASCADE' })
   tests: Test[];
+
+  @HasMany(() => SimpleLightTestEntity, { onDelete: 'CASCADE' })
+  simpleLightTest: SimpleLightTestEntity;
 }
