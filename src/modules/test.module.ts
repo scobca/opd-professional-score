@@ -18,6 +18,9 @@ import { SimpleLightTestEntity } from '../entities/simple-light-test.entity';
 import { SimpleLightTestController } from '../controllers/simple-light-test.controller';
 import { SimpleLightTestProvider } from '../providers/simple-light-test.provider';
 import { TestValidationStrategy } from '../strategies/test-validation.strategy';
+import { SimpleSoundTestController } from '../controllers/simple-sound-test.controller';
+import { SimpleSoundTestProvider } from '../providers/simple-sound-test.provider';
+import { SimpleSoundTestEntity } from '../entities/simple-sound-test.entity';
 
 @Module({
   imports: [
@@ -28,6 +31,7 @@ import { TestValidationStrategy } from '../strategies/test-validation.strategy';
       TestToTestBlock,
       TestToUserDashboard,
       SimpleLightTestEntity,
+      SimpleSoundTestEntity,
     ]),
     UserModule,
   ],
@@ -36,6 +40,7 @@ import { TestValidationStrategy } from '../strategies/test-validation.strategy';
     TestArchiveController,
     TestBlocksArchiveController,
     SimpleLightTestController,
+    SimpleSoundTestController,
   ],
   providers: [
     JwtDecoderUtil,
@@ -45,6 +50,7 @@ import { TestValidationStrategy } from '../strategies/test-validation.strategy';
     TestBlockArchiveProvider,
     SectionProvider,
     SimpleLightTestProvider,
+    SimpleSoundTestProvider,
   ],
   exports: [],
 })
