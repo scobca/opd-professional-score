@@ -24,7 +24,7 @@ export class TestArchiveProvider {
 
   public async getTestById(id: number): Promise<Test> {
     const test = await Test.findOne({ where: { id: id }, include: [Section] });
-    if (!test) throw new TestNotFoundException(id, 'id');
+    if (!test) throw new TestNotFoundException(id, 'id', 'Test');
 
     return test;
   }
