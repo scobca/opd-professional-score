@@ -12,6 +12,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/controllers/AuthController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/UserController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/ProfessionController.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/controllers/PvkController.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/utils/ApiResolver.php";
 
 post('/sign-in', function () {
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -141,13 +142,29 @@ post('/create-profession', function () {
 post('/rate-profession', function () {
     $bearer = getallheaders()["Authorization"];
     $jwt = preg_split("/\s+/", $bearer)[1];
-    if (count($_POST) == 13 && !empty($jwt)) {
+    if (count($_POST) == 8 && !empty($jwt)) {
         \controllers\ProfessionController::rateProfession($_POST, $jwt);
     } else {
+        var_dump($_POST);
         http_response_code(400);
         echo json_encode(array(
             "status" => 400,
             "message" => "Fill empty fields",
+        ));
+    }
+});
+
+post('/get-sentences-vectors', function () {
+    $data = json_decode(file_get_contents('php://input'));
+    $bearer = getallheaders()["Authorization"];
+    $jwt = preg_split("/\s+/", $bearer)[1];
+    if (!empty($jwt) && !empty($data)) {
+        \utils\ApiResolver::resolve($data->inputs);
+    } else {
+        http_response_code(401);
+        echo json_encode(array(
+            "status" => 401,
+            "message" => "You are not authorized to access this data",
         ));
     }
 });
