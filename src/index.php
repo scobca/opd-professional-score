@@ -25,7 +25,8 @@ $create_tables = [
             name VARCHAR(255) UNIQUE NOT NULL,
             description VARCHAR(255) NOT NULL,
             requirements VARCHAR(255) NOT NULL,
-            sphere VARCHAR(255) NOT NULL
+            sphere VARCHAR(255) NOT NULL,
+            is_archive BOOLEAN NOT NULL
         )',
     'CREATE TABLE IF NOT EXISTS refresh_tokens
         (

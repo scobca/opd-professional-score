@@ -167,6 +167,10 @@ class ProfessionController
                     ]);
                     return;
                 }
+
+                if ($profession->updateAccessById($profession_id)) {
+                    var_dump('hi');
+                }
             }
             http_response_code(200);
             echo json_encode([

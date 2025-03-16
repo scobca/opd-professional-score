@@ -18,6 +18,7 @@ class Profession
     {
         $this->db = $conn;
     }
+
     public function getAll(): ?array
     {
         $stmt = $this->db->prepare("SELECT * FROM professions");
@@ -39,7 +40,7 @@ class Profession
     public function create(string $name, string $description, string $requirements, string $sphere): bool
     {
         $stmt = $this->db->prepare(
-            "INSERT INTO professions (name, description, requirements, sphere) VALUES (?, ?, ?, ?)");
+            "INSERT INTO professions (name, description, requirements, sphere, is_archive) VALUES (?, ?, ?, ?, 'true')");
         try {
             $stmt->execute([$name, $description, $requirements, $sphere]);
             return true;
@@ -54,6 +55,19 @@ class Profession
             "UPDATE professions SET name = ?, description = ?, requirements = ?, sphere = ? WHERE id = ?");
         try {
             $stmt->execute([$name, $description, $requirements, $sphere, $id]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function updateAccessById(int $id): bool
+    {
+        $stmt = $this->db->prepare(
+            "UPDATE professions SET is_archive = 'false' WHERE id = ?"
+        );
+        try {
+            $stmt->execute([$id]);
             return true;
         } catch (PDOException $e) {
             return false;
