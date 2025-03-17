@@ -24,6 +24,9 @@ import { SimpleSoundTestEntity } from '../entities/simple-sound-test.entity';
 import { HardLightTestEntity } from '../entities/hard-light-test.entity';
 import { HardLightTestController } from '../controllers/hard-light-test.controller';
 import { HardLightTestProvider } from '../providers/hard-light-test.provider';
+import { AdditionTestEntity } from '../entities/addition-test.entity';
+import { AdditionTestController } from '../controllers/additional-test.controller';
+import { AdditionTestProvider } from '../providers/additioon-test.provider';
 
 @Module({
   imports: [
@@ -36,6 +39,7 @@ import { HardLightTestProvider } from '../providers/hard-light-test.provider';
       SimpleLightTestEntity,
       SimpleSoundTestEntity,
       HardLightTestEntity,
+      AdditionTestEntity,
     ]),
     UserModule,
   ],
@@ -46,6 +50,7 @@ import { HardLightTestProvider } from '../providers/hard-light-test.provider';
     SimpleLightTestController,
     SimpleSoundTestController,
     HardLightTestController,
+    AdditionTestController,
   ],
   providers: [
     JwtDecoderUtil,
@@ -57,6 +62,7 @@ import { HardLightTestProvider } from '../providers/hard-light-test.provider';
     SimpleLightTestProvider,
     SimpleSoundTestProvider,
     HardLightTestProvider,
+    AdditionTestProvider,
   ],
   exports: [],
 })
