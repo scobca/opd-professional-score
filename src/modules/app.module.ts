@@ -12,6 +12,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { ServiceModule } from './service.module';
 import * as process from 'node:process';
+import { ElasticGateway } from '../utils/elastic/elastic.gateway';
 
 @Module({
   imports: [
@@ -51,6 +52,6 @@ import * as process from 'node:process';
     ServiceModule,
   ],
   controllers: [AppController],
-  providers: [AppProvider],
+  providers: [AppProvider, ElasticGateway],
 })
 export class AppModule {}
