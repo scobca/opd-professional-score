@@ -5,7 +5,6 @@ import { CreateProfCharDto } from '../dto/professions/professional-characteristi
 import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 import { BasicSuccessfulResponse } from '../IO/basic-successful-response';
 import { UpdateProfCharDto } from '../dto/professions/professional-characteristics/update-prof-char.dto';
-import { PcTypesEnum } from '../config/enums/pc-types.enum';
 
 @Injectable()
 export class ProfessionalCharacteristicsProvider {
@@ -33,54 +32,6 @@ export class ProfessionalCharacteristicsProvider {
 
   public async getAll() {
     return await ProfessionalCharacteristics.findAll();
-  }
-
-  public async getAllPersonal() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.PERSONAL,
-      },
-    });
-  }
-
-  public async getAllIntellectual() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.INTELLECTUAL,
-      },
-    });
-  }
-
-  public async getAllPhysical() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.PHYSICAL,
-      },
-    });
-  }
-
-  public async getAllPhysiological() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.PHYSIOLOGICAL,
-      },
-    });
-  }
-
-  public async getAllPsychoPhysiological() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.PSYCHO_PHYSIOLOGICAL,
-      },
-    });
-  }
-
-  public async getAllOperational() {
-    return await ProfessionalCharacteristics.findAll({
-      where: {
-        PCType: PcTypesEnum.OPERATIONAL,
-      },
-    });
   }
 
   public async getProfCharById(id: number) {
