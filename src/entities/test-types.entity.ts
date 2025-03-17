@@ -10,6 +10,7 @@ import { Test } from './test.entity';
 import { SimpleLightTestEntity } from './simple-light-test.entity';
 import { SimpleSoundTestEntity } from './simple-sound-test.entity';
 import { HardLightTestEntity } from './hard-light-test.entity';
+import { AdditionTestEntity } from './addition-test.entity';
 
 @Table({ tableName: 'test_types' })
 export class TestTypes extends Model {
@@ -35,4 +36,7 @@ export class TestTypes extends Model {
 
   @HasMany(() => HardLightTestEntity, { onDelete: 'CASCADE' })
   hardLightTest: HardLightTestEntity;
+
+  @HasMany(() => AdditionTestEntity, { onDelete: 'CASCADE' })
+  additionTest: AdditionTestEntity;
 }
