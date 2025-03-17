@@ -40,7 +40,7 @@ export class SimpleLightTestProvider {
     const res = await SimpleLightTestEntity.create({
       testTypeId: testType?.id,
       ...data,
-      valid: this.testValidationStrategy.validateSimpleLightTest(data),
+      valid: this.testValidationStrategy.validateSimpleTest(data),
     });
 
     return new BasicSuccessfulResponse(res);
