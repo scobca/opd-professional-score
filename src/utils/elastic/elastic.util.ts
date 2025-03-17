@@ -44,12 +44,10 @@ export class ElasticUtil {
 
     const docs = await this.ess.search({
       index: index,
-      body: {
-        query: {
-          multi_match: {
-            query: query,
-            fields: fields,
-          },
+      query: {
+        multi_match: {
+          query: query,
+          fields: fields,
         },
       },
     });

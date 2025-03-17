@@ -14,6 +14,7 @@ import { ArchiveProfessionsStrategy } from '../strategies/archive-professions.st
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ElasticUtil } from '../utils/elastic/elastic.util';
+import { ElasticGateway } from '../utils/elastic/elastic.gateway';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ElasticUtil } from '../utils/elastic/elastic.util';
     JwtDecoderUtil,
     ArchiveProfessionsStrategy,
     ElasticUtil,
+    ElasticGateway,
   ],
   controllers: [ProfessionalCharacteristicsController, ProfessionController],
   exports: [
