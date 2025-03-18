@@ -322,12 +322,12 @@ foreach ($pvk_array as $pvk_category) {
     }
     $i++;
 }
-
-foreach ($professions_array as $profession) {
-    try {
-        $profLoader = new \models\Profession($database->getConnection());
-        $profLoader->create($profession[0], $profession[1], $profession[2], $profession[3]);
-    } catch (PDOException $e) {
-        echo $e->getMessage() . "<br>";
-    }
-}
+//
+//foreach ($professions_array as $profession) {
+//    try {
+//        $profLoader = new \models\Profession($database->getConnection());
+//        $profLoader->create($profession[0], $profession[1], $profession[2], $profession[3]);
+//    } catch (PDOException $e) {
+//        echo $e->getMessage() . "<br>";
+//    }
+//}

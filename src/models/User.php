@@ -45,9 +45,20 @@ class User
 
     public function getByEmail(string $email): bool
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        return $this->fillData($stmt);
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->bindParam(":email", $email);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            $this->id = $data['id'];
+            $this->username = $data['username'];
+            $this->email = $data['email'];
+            $this->role = $data['role'];
+            $this->password = $data['password'];
+            $this->isVerified = $data['is_verified'];
+            return true;
+        }
+        return false;
     }
 
     public function getAll(): array
@@ -106,20 +117,5 @@ class User
             return $stmt->fetchColumn();
         }
         return null;
-    }
-
-    private function fillData($stmt): bool
-    {
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($data) {
-            $this->id = $data['id'];
-            $this->username = $data['username'];
-            $this->email = $data['email'];
-            $this->role = $data['role'];
-            $this->password = $data['password'];
-            $this->isVerified = $data['is_verified'];
-            return true;
-        }
-        return false;
     }
 }

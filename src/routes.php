@@ -110,7 +110,12 @@ post('/update-profession', function () {
         $description = htmlspecialchars(trim($_POST['profession_description']));
         $requirements = htmlspecialchars(trim($_POST['profession_requirements']));
         $sphere = htmlspecialchars(trim($_POST['profession_sphere']));
-        \controllers\ProfessionController::updateProfessionById($id, $name, $description, $requirements, $sphere, $jwt);
+        if (!empty($_POST['profession_archive'])) {
+            $is_archive = htmlspecialchars(trim($_POST['profession_archive']));
+        } else {
+            $is_archive = "true";
+        }
+        \controllers\ProfessionController::updateProfessionById($id, $name, $description, $requirements, $sphere, $is_archive, $jwt);
     } else {
         http_response_code(400);
         echo json_encode(array(

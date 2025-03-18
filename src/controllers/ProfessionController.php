@@ -92,7 +92,7 @@ class ProfessionController
         }
     }
 
-    public static function updateProfessionById(int $id, string $name, string $description, string $requirements, string $sphere, string $jwt): void
+    public static function updateProfessionById(int $id, string $name, string $description, string $requirements, string $sphere, string $is_archive, string $jwt): void
     {
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Profession.php";
         include_once $_SERVER['DOCUMENT_ROOT'] . "/models/Database.php";
@@ -104,7 +104,7 @@ class ProfessionController
         $credentials = JWTHandler::getJWTData($jwt);
 
         if ($credentials["role"] === "admin" || $credentials["role"] === "expert" || $credentials["role"] === "moderator") {
-            if ($profession->updateById($id, $name, $description, $requirements, $sphere)) {
+            if ($profession->updateById($id, $name, $description, $requirements, $sphere, $is_archive)) {
                 http_response_code(200);
                 echo json_encode([
                     "status" => 200,
@@ -167,9 +167,15 @@ class ProfessionController
                     ]);
                     return;
                 }
-
-                if ($profession->updateAccessById($profession_id)) {
-                    var_dump('hi');
+            }
+            $profession = new Profession($conn);
+            if ($profession->countRatingsById($profession_id) >= 18) {
+                if (!$profession->updateAccessById($profession_id)) {
+                    http_response_code(500);
+                    echo json_encode([
+                        "status" => 500,
+                        "message" => "Deletion from archive error"
+                    ]);
                 }
             }
             http_response_code(200);

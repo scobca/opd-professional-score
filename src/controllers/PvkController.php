@@ -70,7 +70,7 @@ class PvkController
             http_response_code(404);
             echo json_encode([
                 "status" => 404,
-                "message" => "No professions found"
+                "message" => "No pvk found"
             ]);
         }
     }

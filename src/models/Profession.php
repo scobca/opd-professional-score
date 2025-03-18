@@ -49,12 +49,12 @@ class Profession
         }
     }
 
-    public function updateById(int $id, string $name, string $description, string $requirements, string $sphere): bool
+    public function updateById(int $id, string $name, string $description, string $requirements, string $sphere, string $is_archive): bool
     {
         $stmt = $this->db->prepare(
-            "UPDATE professions SET name = ?, description = ?, requirements = ?, sphere = ? WHERE id = ?");
+            "UPDATE professions SET name = ?, description = ?, requirements = ?, sphere = ?, is_archive = ? WHERE id = ?");
         try {
-            $stmt->execute([$name, $description, $requirements, $sphere, $id]);
+            $stmt->execute([$name, $description, $requirements, $sphere, $is_archive, $id]);
             return true;
         } catch (PDOException $e) {
             return false;
@@ -85,6 +85,17 @@ class Profession
             return true;
         } catch (PDOException $e) {
             return false;
+        }
+    }
+
+    public function countRatingsById(int $id): int
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM professions_ratings WHERE profession_id = ?");
+        try {
+            $stmt->execute([$id]);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            return 0;
         }
     }
 
