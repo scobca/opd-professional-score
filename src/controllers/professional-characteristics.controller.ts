@@ -29,36 +29,6 @@ export class ProfessionalCharacteristicsController {
     return await this.profCharProvider.getPCByName(name);
   }
 
-  @Get('getAllPersonal')
-  public async getAllPersonal() {
-    return await this.profCharProvider.getAllPersonal();
-  }
-
-  @Get('getAllIntellectual')
-  public async getAllIntellectual() {
-    return await this.profCharProvider.getAllIntellectual();
-  }
-
-  @Get('getAllPhysical')
-  public async getAllPhysical() {
-    return await this.profCharProvider.getAllPhysical();
-  }
-
-  @Get('getAllPhysiological')
-  public async getAllPhysiological() {
-    return await this.profCharProvider.getAllPhysiological();
-  }
-
-  @Get('getAllPsychoPhysiological')
-  public async getAllPsychoPhysiological() {
-    return await this.profCharProvider.getAllPsychoPhysiological();
-  }
-
-  @Get('getAllOperational')
-  public async getAllOperational() {
-    return await this.profCharProvider.getAllOperational();
-  }
-
   @Get('/getProfCharById/:id')
   public async getById(@Param('id') id: number) {
     return await this.profCharProvider.getProfCharById(id);
