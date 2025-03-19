@@ -15,6 +15,8 @@ import { AuthCodesStrategy } from '../strategies/auth-codes.strategy';
 import { DoubleRecordException } from '../exceptions/common/double-record.exception';
 import { IncorrectVerificationCodeException } from '../exceptions/auth/incorrect-verification-code.exception';
 import { RegistrationSecondStepDto } from '../dto/auth/registration-second-step.dto';
+import { CodeTypeEnum } from '../config/enums/code-type.enum';
+import { SendCodeAgainDto } from '../dto/auth/send-code-again.dto';
 
 @Injectable()
 export class AuthProvider {
@@ -25,6 +27,28 @@ export class AuthProvider {
     @Inject(MailerProvider) private mailerProvider: MailerProvider,
     @Inject(AuthCodesStrategy) private authCodesStrategy: AuthCodesStrategy,
   ) {}
+
+  public async sendCodeAgain(data: SendCodeAgainDto) {
+    let code = 0;
+    if (data.codeType == CodeTypeEnum.AUTH) {
+      await this.authCodesStrategy.applyAuthCode(data.email).then((res) => {
+        code = res.code;
+      });
+    } else if (data.codeType == CodeTypeEnum.PASSWORD) {
+      await this.authCodesStrategy.applyPassCode(data.email).then((res) => {
+        code = res.code;
+      });
+    }
+
+    const mail: MailInfoDto = {
+      email: data.email,
+      username: data.username,
+      code: code,
+    };
+    await this.mailerProvider.sendAccountVerificationMail(mail).then(() => {
+      return new BasicSuccessfulResponse<string>('Code sent successfully');
+    });
+  }
 
   public async signUpFirstStep(
     data: RegistrationFirstStepDto,
