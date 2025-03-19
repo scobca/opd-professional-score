@@ -27,6 +27,7 @@ export class AverageProfessionRatingStrategy {
         let minScore = 21;
         let maxScore = -21;
 
+        const scoresCount = await this.getCountOfScores(professionId);
         const professionToPC = await ProfessionScores.findAll({
           where: {
             professionId: professionId,
@@ -43,6 +44,7 @@ export class AverageProfessionRatingStrategy {
         );
         const dispersion = maxScore - minScore;
         const average = score / professionToPC.length;
+        const pcDispersion = scoresCount - professionToPC.length;
 
         if (!isNaN(average)) {
           let resultScore: number;
@@ -59,12 +61,34 @@ export class AverageProfessionRatingStrategy {
             pcId: pc.id,
             pcName: pc.name,
             pcDescription: pc.description,
-            averageScore: parseFloat(resultScore.toFixed(2)),
+            averageScore:
+              pcDispersion == 0
+                ? parseFloat(resultScore.toFixed(2))
+                : parseFloat((resultScore / pcDispersion).toFixed(2)),
           });
         }
       }),
     );
 
     return res;
+  }
+
+  private async getCountOfScores(professionId: number): Promise<number> {
+    const profession = await Profession.findOne({
+      where: { id: professionId },
+    });
+    if (profession == null)
+      throw new ProfessionNotFoundException(professionId, 'id');
+
+    const professionScores = await ProfessionScores.findAll({
+      where: { professionId: professionId },
+    });
+
+    const userIds = new Set();
+    professionScores.forEach((professionScore) => {
+      userIds.add(professionScore.userId);
+    });
+
+    return userIds.size;
   }
 }
