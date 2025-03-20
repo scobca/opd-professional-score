@@ -1,5 +1,6 @@
 #config
 /src/config/jwt.conf.ts
+/docker/node/jwt.conf.ts
 
 # compiled output
 /dist

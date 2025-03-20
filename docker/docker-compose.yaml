@@ -21,6 +21,8 @@ services:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
+    networks:
+      - internal
 
   kibana:
     image: kibana:8.2.0
@@ -33,6 +35,8 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    networks:
+      - internal
 
   postgres:
     container_name: opd-professional-score-postgres
@@ -44,6 +48,28 @@ services:
       - opd-professional-score:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - internal
+
+  backend:
+    image: node:23
+    container_name: backend
+    ports:
+      - "3000:3000"
+    entrypoint: /bin/bash /home/startup.sh
+    volumes:
+      - ./node:/home/
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: Qgrw183Vdk73.
+      DB_DATABASE: postgres
+      SMTP_TRANSPORT: smtps://esc-notes@yandex.ru:qqkgekgrxcotsxzx@smtp.yandex.ru
+      SMTP_USER: esc-notes@yandex.ru
+      ELASTICSEARCH_USERNAME: fvs10072006@gmail.com
+      ELASTICSEARCH_PASSWORD: xyrkev-nufrud-5Mokvo
+      ELASTIC_HOST: http://elastic:9200
     networks:
       - internal
 

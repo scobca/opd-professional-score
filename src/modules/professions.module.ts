@@ -28,7 +28,7 @@ import { ElasticGateway } from '../utils/elastic/elastic.gateway';
     ElasticsearchModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        node: 'http://localhost:9200',
+        node: configService.get('ELASTIC_HOST') as string,
         auth: {
           username: configService.get('ELASTICSEARCH_USERNAME') as string,
           password: configService.get('ELASTICSEARCH_PASSWORD') as string,
